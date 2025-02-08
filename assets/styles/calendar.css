@@ -1,0 +1,108 @@
+.nav_date-info {
+    color: #030712;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.calendar {
+    width: 100%;
+    border-collapse: collapse;
+    color: #030712;
+    --color: #3788d8;
+    --cell-padding: .5rem;
+}
+
+.calendar th {
+    width: calc(100% / 7);
+    height: 3rem;
+}
+
+.calendar td {
+    vertical-align: top;
+    border: 1px solid rgba(155, 154, 154, .3);
+    max-width: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.calendar td.current-day {
+    background-color: rgba(239, 246, 255, 1);
+}
+
+.calendar .calendar_cell {
+    aspect-ratio: 1;
+    padding: var(--cell-padding);
+}
+
+.calendar .calendar_cell .calendar_date{
+    text-align: center;
+}
+
+.calendar .calendar_date-diff {
+    opacity: .3;
+}
+
+.calendar .calendar_events {
+    font-size: .75rem;
+    position: relative;
+    padding-top: calc(var(--offset) * 24px);
+}
+.calendar .calendar_event-hour {
+    display: flex;
+    align-items: center;
+    gap: .3rem
+}
+.calendar_event-fullday {
+    position: absolute;
+    --overflow: 0px;
+    width: calc(100% * var(--days) + (var(--cell-padding) * 2 + 1px) * (var(--days) - 1) + var(--overflow));
+    background-color: var(--color);
+    color: #fff;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 5px;
+    padding: 0 5px;
+    top: calc(var(--offset) * 24px);
+}
+.calendar .calendar_event-hour span{
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.calendar .calendar_event-hour::before {
+    content: '';
+    flex: none;
+    width: 8px;
+    height: 8px;
+    display: block;
+    border-radius: 50%;
+    background-color: var(--color);
+}
+
+.calendar_event-overflow-left {
+    margin-left: calc(var(--cell-padding) * -1);
+    --overflow: var(--cell-padding);
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+.calendar_event-overflow-right {
+    --overflow: var(--cell-padding);
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.calendar_event-overflow-right.calendar_event-overflow-left {
+    --overflow: calc(var(--cell-padding) * 2);
+}
+
+
+.calendar .calendar_event-doctor {
+    --color: #ff5858
+}
+
+.calendar .calendar_event-holidays {
+    --color: #74b057
+}

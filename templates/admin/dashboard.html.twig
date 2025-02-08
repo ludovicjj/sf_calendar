@@ -1,5 +1,43 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-   home admin here (wip)
+   <div id="app" data-controller="calendar" class="p-8">
+      <div class="flex items-center gap-4 mb-4">
+         <div class="flex items-center gap-4">
+            <button type="button" class="border border-grey-900
+               px-6 py-2 rounded-lg font-medium
+               transition-colors duration-200 ease-in-out
+               hover:bg-gray-200 focus:outline-none"
+            >
+               Aujourd'hui
+            </button>
+
+            <div>
+               <button type="button"
+                       class="border border-grey-900 p-2 rounded-lg
+                              transition-colors duration-200 ease-in-out
+                              hover:bg-gray-200 focus:outline-none"
+                       data-action="click->calendar#prev"
+               >
+                  {{ ux_icon('iconoir:nav-arrow-left', { class: 'w-6 h-6' }) }}
+               </button>
+
+               <button type="button"
+                       class="border border-grey-900 p-2 rounded-lg
+                              transition-colors duration-200 ease-in-out
+                              hover:bg-gray-200 focus:outline-none"
+                       data-action="click->calendar#next"
+               >
+                  {{ ux_icon('iconoir:nav-arrow-right', { class: 'w-6 h-6' }) }}
+               </button>
+            </div>
+         </div>
+         <div class="font-medium text-xl" data-calendar-target="date">
+            {{ "now"|format_date(pattern="MMMM Y", locale='fr') }}
+         </div>
+      </div>
+      <div data-calendar-target="root" class="border border-gray-300 rounded-lg">
+
+      </div>
+   </div>
 {% endblock %}
