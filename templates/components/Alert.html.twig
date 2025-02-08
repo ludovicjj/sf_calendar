@@ -1,0 +1,16 @@
+<div
+        class="flex items-center p-4 mb-4 {{ color }} rounded-lg text-white"
+>
+    <div class="flex-shrink-0 mr-3">
+        {% if icon == 'error' %}
+            {{ ux_icon('system-uicons:cross-circle', { class: 'w-6 h-6' }) }}
+        {% elseif icon == 'warning' %}
+            {{ ux_icon('solar:danger-circle-linear', { class: 'w-6 h-6' }) }}
+        {% elseif icon == 'success' %}
+            {{ ux_icon('qlementine-icons:success-16', { class: 'w-5 h-5' }) }}
+        {% endif %}
+    </div>
+    <div class="text-sm">
+        {{ message }}
+    </div>
+</div>
