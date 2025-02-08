@@ -8,6 +8,7 @@
 
 .calendar {
     width: 100%;
+    max-width: 1050px;
     border-collapse: collapse;
     color: #030712;
     --color: #3788d8;
@@ -17,6 +18,10 @@
 .calendar th {
     width: calc(100% / 7);
     height: 3rem;
+}
+
+.calendar tr th {
+    border: 1px solid rgba(155, 154, 154, .3);
 }
 
 .calendar td {

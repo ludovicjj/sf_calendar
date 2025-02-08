@@ -7,30 +7,46 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Attribute\SerializedName;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Attribute\Groups;
+use DateTime;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
+    #[Groups(['user:events'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['user:events'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[Groups(['user:events'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[Groups(['user:events'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $type = null;
 
+    #[Groups(['user:events'])]
     #[ORM\Column]
     private ?bool $fullDay = null;
 
+    #[Groups(['user:events'])]
+    #[SerializedName('start')]
+    #[Context([DateTimeNormalizer::FORMAT_KEY => DateTime::ATOM])]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $startAt = null;
 
+    #[Groups(['user:events'])]
+    #[SerializedName('end')]
+    #[Context([DateTimeNormalizer::FORMAT_KEY => DateTime::ATOM])]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $endAt = null;
 

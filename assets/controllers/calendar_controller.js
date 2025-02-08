@@ -1,6 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
 import '../styles/calendar.css';
-import {Events} from "../js/data.js";
 import {addDays,
     diffInDay,
     endOfMonth,
@@ -8,7 +7,8 @@ import {addDays,
     getDayId,
     getDaysBetween,
     minDates,
-    startOfWeek
+    startOfWeek,
+    fetchEvent
 } from "../js/functions/date.js";
 
 /** @typedef {{name: string, start: Date, end: Date, fullDay?: boolean, type?: string}} CalendarEvent */
@@ -24,7 +24,9 @@ export default class extends Controller {
     /** @type {Map<string, CalendarEvent[]>} */
     #eventsMap = new Map()
 
-    connect() {
+    async connect() {
+        const events = await fetchEvent('/api/events/user/2')
+
         this.#eventsMap = new Map()
         this.month = new Date().getMonth()
         this.year = new Date().getFullYear()
@@ -33,7 +35,7 @@ export default class extends Controller {
             console.error('missing root element')
         }
 
-        this.#fillEventMap(Events)
+        this.#fillEventMap(events)
         this.#render()
     }
 
@@ -80,16 +82,15 @@ export default class extends Controller {
         this.#showCurrentDate(curentDate)
 
 
-        this.rootTarget.innerHTML = `
-            <table class="calendar">
+        this.rootTarget.innerHTML = `<table class="calendar">
             <thead>
                 <tr>
                     ${days.map(day => `<th>${day}</th>`).join('')}
                 </tr>
             </thead>
-                <tbody>
-                </tbody>
-            </table>`
+            <tbody>
+            </tbody>
+        </table>`
 
         /** @type {Map<CalendarEvent, position>} */
         const positionMap = new Map()

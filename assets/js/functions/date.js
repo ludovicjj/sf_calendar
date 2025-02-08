@@ -169,3 +169,49 @@ export function minDates(dates) {
 
     return min;
 }
+
+/**
+ * Recupere les evements depuis une API tier
+ * @param {string} url
+ */
+export async function fetchEvent(url)
+{
+    const response = await fetch(url)
+    const data = await response.json()
+
+    if (!data.hasOwnProperty('events')) {
+        return []
+    }
+
+    return data.events
+        .map(event => formatEvent(event))
+        .filter(event => event !== null);
+}
+
+/**
+ * @param {object} event
+ */
+function formatEvent(event) {
+    try {
+        return {
+            ...event,
+            start: parseDate(event.start),
+            end: parseDate(event.end),
+        };
+    } catch (error) {
+        console.error('Error parsing event dates:', error);
+        return null;
+    }
+}
+
+/**
+ * Transforme des date au format string en object Date
+ * @param {string} dateString
+ */
+function parseDate(dateString) {
+    const date = new Date(dateString);
+    if (isNaN(date.valueOf())) {
+        throw new Error(`Invalid date: ${dateString}`);
+    }
+    return date;
+}
