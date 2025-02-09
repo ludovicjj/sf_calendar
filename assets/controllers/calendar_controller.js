@@ -133,7 +133,7 @@ export default class extends Controller {
         }
 
         td.innerHTML = `<div class="calendar_cell">
-            <div class="calendar_date ${isCurrentMonth ? '' : 'calendar_date-diff'}">${date.getDate()}</div>
+            <div class="calendar_date${isCurrentMonth ? '' : ' calendar_date-diff'}">${date.getDate()}</div>
             <div class="calendar_events"></div>
         </div>`
 
@@ -182,6 +182,7 @@ export default class extends Controller {
                 finishedEvents.push(event)
             }
 
+            // Début d'un évènement un seul jour
             if (!event.fullDay) {
                 classes.push('calendar_event-hour')
                 eventContainer.insertAdjacentHTML('beforeend', `<div class="${classes.join(' ')}">

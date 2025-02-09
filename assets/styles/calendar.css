@@ -54,11 +54,17 @@
     position: relative;
     padding-top: calc(var(--offset) * 24px);
 }
+.calendar .calendar_event {
+    cursor: pointer;
+}
+
+/* event one day */
 .calendar .calendar_event-hour {
     display: flex;
     align-items: center;
     gap: .3rem
 }
+/* event one day */
 .calendar_event-fullday {
     position: absolute;
     --overflow: 0px;
@@ -70,6 +76,7 @@
     border-radius: 5px;
     padding: 0 5px;
     top: calc(var(--offset) * 24px);
+    z-index: 2;
 }
 .calendar .calendar_event-hour span{
     display: block;
