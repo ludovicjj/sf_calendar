@@ -81,31 +81,127 @@ export default class extends Controller {
 
         this.#showCurrentDate(curentDate)
 
-
-        this.rootTarget.innerHTML = `<table class="calendar">
-            <thead>
-                <tr>
-                    ${days.map(day => `<th>${day}</th>`).join('')}
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>`
+        this.rootTarget.innerHTML = `
+            <div class="calendar">
+                <div class="calendar-month-header" role="row">
+                    ${days.map(day => `<div class="month-header"><p class="day">${day}</p></div>`).join("")}
+                </div>
+            </div>
+        `;
 
         /** @type {Map<CalendarEvent, position>} */
         const positionMap = new Map()
-        const tbody = this.rootTarget.querySelector('tbody')
-        let tr = document.createElement('tr')
+        const calendar = this.rootTarget.querySelector('.calendar')
+        let monthRow = this.createMonthRow()
 
         for (const dayOfMonth of daysOfMonth) {
-            const td = this.#buildCell(dayOfMonth, this.month, positionMap)
-            tr.append(td)
+            const cell = this.#buildDivCell(dayOfMonth, this.month, positionMap)
+            monthRow.append(cell)
             if (dayOfMonth.getDay() === 0) {
-                tbody.append(tr)
-                tr = document.createElement('tr')
+                calendar.append(monthRow)
+                monthRow = this.createMonthRow()
                 positionMap.clear()
             }
         }
+    }
+
+    #buildDivCell(date, month, positionMap) {
+        const getAvailablePosition = () => {
+            if (positionMap.size === 0) {
+                return 0;
+            }
+            const positions = Array.from(positionMap.values());
+            const max = Math.max(...positions);
+            for (let i = 0; i < max; i++) {
+                if (!positions.includes(i)) {
+                    return i;
+                }
+            }
+            return max + 1;
+        }
+        const cell = document.createElement('div')
+        cell.classList.add('month-cell')
+
+
+        const dayId = getDayId(date)
+        const currentDayId = getDayId(new Date())
+        const isCurrentMonth = date.getMonth() === month
+        const isCurrentDay = currentDayId === dayId
+
+        if (isCurrentDay) {
+            cell.classList.add('current-day')
+        }
+
+        cell.innerHTML = `
+            <div class="calendar_date${isCurrentMonth ? '' : ' calendar_date-diff'}">
+                ${date.getDate()}
+            </div>
+            <div class="calendar_events"></div>
+        `
+
+        const eventContainer = cell.querySelector('.calendar_events')
+        const events = this.#eventsMap.get(dayId) || []
+        const finishedEvents = [];
+
+        for (const event of events) {
+            const classes = ['calendar_event']
+            if (event.type) {
+                classes.push('calendar_event-' + event.type)
+            }
+
+
+            // Début d'un évènement sur plusieurs jours
+            if (
+                event.fullDay &&
+                (dayId === getDayId(event.start) || date.getDay() === 1)
+            ) {
+                const position = getAvailablePosition()
+                positionMap.set(event, position);
+                const endDate =  minDates([event.end, endOfWeek(date)])
+
+                const days = diffInDay(date, endDate)
+
+                if (dayId !== getDayId(event.start)) {
+                    classes.push('calendar_event-overflow-left')
+                }
+                if (endDate !== event.end) {
+                    classes.push('calendar_event-overflow-right')
+                }
+                classes.push('calendar_event-fullday')
+
+                eventContainer.insertAdjacentHTML(
+                    'beforeend',
+                    `<div 
+                        class="${classes.join(' ')}"
+                        style="--days:${days}; --offset:${position}"
+                    >
+                        ${event.name}
+                    </div>`
+                )
+            }
+
+            if (event.fullDay && dayId === getDayId(event.end)) {
+                finishedEvents.push(event)
+            }
+
+            // Début d'un évènement un seul jour
+            if (!event.fullDay) {
+                classes.push('calendar_event-hour')
+                eventContainer.insertAdjacentHTML('beforeend', `<div class="${classes.join(' ')}">
+                    <span>${timeFormatter.format(event.start)} - ${event.name}</span>
+                </div>`)
+            }
+        }
+
+        // Gestion des chevauchements
+        const maxOffset = positionMap.size > 0 ? Math.max(...positionMap.values()) + 1 : 0;
+        eventContainer.style.setProperty('--offset', maxOffset.toString())
+
+        for (const event of finishedEvents) {
+            positionMap.delete(event)
+        }
+
+        return cell
     }
 
     #buildCell(date, month, positionMap) {
@@ -198,6 +294,14 @@ export default class extends Controller {
         }
 
         return td
+    }
+
+    createMonthRow() {
+        const row = document.createElement('div')
+        row.classList.add('calendar-month-row')
+        row.setAttribute('role', 'row-group')
+
+        return row
     }
 
     /**

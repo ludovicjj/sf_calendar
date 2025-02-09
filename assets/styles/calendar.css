@@ -1,70 +1,84 @@
-.nav_date-info {
-    color: #030712;
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
 .calendar {
-    width: 100%;
-    max-width: 1050px;
-    border-collapse: collapse;
-    color: #030712;
+    border: 1px solid rgba(155, 154, 154, .3);
+    border-radius: .5rem;
+    min-height: 400px; /*to remove*/
     --color: #3788d8;
     --cell-padding: .5rem;
 }
-
-.calendar th {
-    width: calc(100% / 7);
-    height: 3rem;
+/* CALENDAR HEADER */
+.calendar .calendar-month-header {
+    display: flex;
+    flex-direction: row;
 }
-
-.calendar tr th {
-    border: 1px solid rgba(155, 154, 154, .3);
+.calendar .calendar-month-header .month-header {
+    flex: 1 0 0;
+    border-bottom: 1px solid rgba(155, 154, 154, .3);
 }
-
-.calendar td {
-    vertical-align: top;
-    border: 1px solid rgba(155, 154, 154, .3);
-    max-width: 0;
-    margin: 0;
-    padding: 0;
+.calendar .calendar-month-header .month-header p.day{
+    height: 24px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 17px;
+    color: rgb(101, 119, 140);
+    padding: 0 .5rem;
 }
-
-.calendar td.current-day {
-    background-color: rgba(239, 246, 255, 1);
+/* CALENDAR BODY */
+.calendar .calendar-month-row {
+    display: flex;
+    flex-direction: row;
 }
-
-.calendar .calendar_cell {
+.calendar .calendar-month-row:not(:last-child) {
+    border-bottom: 1px solid rgba(155, 154, 154, .3);
+}
+.calendar .calendar-month-row .month-cell {
+    flex: 1 0 0;
     aspect-ratio: 1;
     padding: var(--cell-padding);
+    width: calc(100% / 7); /* usefull for text-overflow: ellipsis */
 }
-
-.calendar .calendar_cell .calendar_date{
-    text-align: center;
+.calendar .calendar-month-row .month-cell.current-day {
+    background-color: rgba(239, 246, 255, 1);
 }
-
-.calendar .calendar_date-diff {
-    opacity: .3;
+.calendar .calendar-month-row .month-cell:not(:last-child) {
+    border-right: 1px solid rgba(155, 154, 154, .3);
 }
-
-.calendar .calendar_events {
+.calendar .calendar-month-row .month-cell .calendar_events {
     font-size: .75rem;
     position: relative;
     padding-top: calc(var(--offset) * 24px);
 }
-.calendar .calendar_event {
+.calendar .calendar-month-row .month-cell .calendar_date {
+    text-align: center;
+}
+.calendar .calendar-month-row .month-cell .calendar_date-diff {
+    opacity: .3;
+}
+.calendar .calendar-month-row .month-cell .calendar_event {
     cursor: pointer;
 }
-
-/* event one day */
-.calendar .calendar_event-hour {
+/* Event on a SINGLE day */
+.calendar .calendar-month-row .month-cell .calendar_event-hour {
     display: flex;
     align-items: center;
-    gap: .3rem
+    gap: 0.5rem;
 }
-/* event one day */
+.calendar .calendar-month-row .month-cell .calendar_event-hour span{
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.calendar .calendar-month-row .month-cell .calendar_event-hour::before {
+    content: '';
+    flex: none;
+    width: 8px;
+    height: 8px;
+    display: block;
+    border-radius: 50%;
+    background-color: var(--color);
+}
+/* Event on MANY days */
 .calendar_event-fullday {
     position: absolute;
     --overflow: 0px;
@@ -78,22 +92,6 @@
     top: calc(var(--offset) * 24px);
     z-index: 2;
 }
-.calendar .calendar_event-hour span{
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.calendar .calendar_event-hour::before {
-    content: '';
-    flex: none;
-    width: 8px;
-    height: 8px;
-    display: block;
-    border-radius: 50%;
-    background-color: var(--color);
-}
-
 .calendar_event-overflow-left {
     margin-left: calc(var(--cell-padding) * -1);
     --overflow: var(--cell-padding);
@@ -109,12 +107,15 @@
 .calendar_event-overflow-right.calendar_event-overflow-left {
     --overflow: calc(var(--cell-padding) * 2);
 }
-
-
-.calendar .calendar_event-doctor {
+/* Event color */
+.calendar_event-red {
     --color: #ff5858
 }
 
-.calendar .calendar_event-holidays {
-    --color: #74b057
+.calendar_event-blue {
+    --color: #3788d8;
+}
+
+.calendar_event-green {
+    --color: #74b057;
 }

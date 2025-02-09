@@ -2,46 +2,66 @@
 
 {% block body %}
    <div id="app" data-controller="calendar" class="pt-8 px-8">
-      <div class="flex items-center gap-4 mb-4">
+      <div class="flex justify-between mb-4">
          <div class="flex items-center gap-4">
-            <button type="button" class="border border-grey-900
+            <div class="flex items-center gap-4">
+               <button type="button" class="border border-grey-900
                px-6 py-2 rounded-lg font-medium
                transition-colors duration-200 ease-in-out
                hover:bg-gray-200 focus:outline-none"
-            >
-               Aujourd'hui
-            </button>
-
-            <div>
-               <button type="button"
-                       class="border border-grey-900 p-2 rounded-lg
-                              transition-colors duration-200 ease-in-out
-                              hover:bg-gray-200 focus:outline-none"
-                       data-action="click->calendar#prev"
                >
-                  {{ ux_icon('iconoir:nav-arrow-left', { class: 'w-6 h-6' }) }}
+                  Aujourd'hui
                </button>
 
-               <button type="button"
-                       class="border border-grey-900 p-2 rounded-lg
+               <div>
+                  <button type="button"
+                          class="border border-grey-900 p-2 rounded-lg
                               transition-colors duration-200 ease-in-out
                               hover:bg-gray-200 focus:outline-none"
-                       data-action="click->calendar#next"
-               >
-                  {{ ux_icon('iconoir:nav-arrow-right', { class: 'w-6 h-6' }) }}
-               </button>
+                          data-action="click->calendar#prev"
+                  >
+                     {{ ux_icon('iconoir:nav-arrow-left', { class: 'w-6 h-6' }) }}
+                  </button>
+
+                  <button type="button"
+                          class="border border-grey-900 p-2 rounded-lg
+                              transition-colors duration-200 ease-in-out
+                              hover:bg-gray-200 focus:outline-none"
+                          data-action="click->calendar#next"
+                  >
+                     {{ ux_icon('iconoir:nav-arrow-right', { class: 'w-6 h-6' }) }}
+                  </button>
+               </div>
+            </div>
+            <div class="font-medium text-xl" data-calendar-target="date">
+               {{ "now"|format_date(pattern="MMMM Y", locale='fr') }}
             </div>
          </div>
-         <div class="font-medium text-xl" data-calendar-target="date">
-            {{ "now"|format_date(pattern="MMMM Y", locale='fr') }}
+         <div>
+            <button type="button"
+                    class="border border-grey-900 p-2 rounded-lg
+                           transition-colors duration-200 ease-in-out
+                           hover:bg-gray-200 focus:outline-none"
+                    data-action="click->calendar#create"
+            >
+               {{ ux_icon('tabler:plus', { class: 'w-6 h-6' }) }}
+            </button>
          </div>
       </div>
       <div class="flex gap-4">
-         <div class="w-[400px] border border-grey-400 rounded-lg"></div>
-         <div
-                 data-calendar-target="root"
-                 class="flex-grow"
-         ></div>
+         <div class="w-[400px] h-[779px] border border-grey-400 rounded-lg flex flex-col p-4">
+            {# Titre de la section #}
+            <h2 class="text-center text-md font-medium text-gray-800">Les événements du jour</h2>
+
+            {# Content when no events #}
+            <div class="flex flex-col items-center justify-center flex-1">
+               {{ ux_icon('custom:cactus', {fill: 'none', class: 'w-[300px] h-[150px]'}) }}
+               <p class="font-medium text-sm text-gray-600 text-center mt-2">
+                  Il n'y a pas d'éléments sur la période sélectionnée
+               </p>
+            </div>
+         </div>
+         <div data-calendar-target="root" class="flex-grow"></div>
       </div>
    </div>
 {% endblock %}
