@@ -131,9 +131,12 @@ export default class extends Controller {
         if (isCurrentDay) {
             cell.classList.add('current-day')
         }
+        if (!isCurrentMonth) {
+            cell.classList.add('month-cell-out')
+        }
 
         cell.innerHTML = `
-            <div class="calendar_date${isCurrentMonth ? '' : ' calendar_date-diff'}">
+            <div class="calendar_date">
                 ${date.getDate()}
             </div>
             <div class="calendar_events"></div>

@@ -43,6 +43,17 @@
 .calendar .calendar-month-row .month-cell:not(:last-child) {
     border-right: 1px solid rgba(155, 154, 154, .3);
 }
+.calendar .calendar-month-row .month-cell.month-cell-out {
+    background: repeating-linear-gradient(
+            -30deg,
+            rgb(247, 249, 252), rgb(247, 249, 252) 12px,
+            rgb(235, 240, 245) 10px, rgb(235, 240, 245) 13px
+    );
+}
+.calendar .calendar-month-row .month-cell.month-cell-out .calendar_date {
+    opacity: .3;
+}
+
 .calendar .calendar-month-row .month-cell .calendar_events {
     font-size: .75rem;
     position: relative;
@@ -50,9 +61,6 @@
 }
 .calendar .calendar-month-row .month-cell .calendar_date {
     text-align: center;
-}
-.calendar .calendar-month-row .month-cell .calendar_date-diff {
-    opacity: .3;
 }
 .calendar .calendar-month-row .month-cell .calendar_event {
     cursor: pointer;
