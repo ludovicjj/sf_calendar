@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -11,44 +12,47 @@ use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Attribute\Groups;
-use DateTime;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
-    #[Groups(['user:events'])]
+    #[Groups(['user:events', 'event:read'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['user:events'])]
+    #[Assert\NotBlank]
+    #[Groups(['user:events', 'event:read'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[Groups(['user:events'])]
+    #[Groups(['user:events', 'event:read'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[Groups(['user:events'])]
+    #[Groups(['user:events', 'event:read'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $type = null;
 
-    #[Groups(['user:events'])]
+    #[Groups(['user:events', 'event:read'])]
     #[ORM\Column]
     private ?bool $fullDay = null;
 
-    #[Groups(['user:events'])]
+    #[Assert\NotBlank]
+    #[Groups(['user:events', 'event:read'])]
     #[SerializedName('start')]
-    #[Context([DateTimeNormalizer::FORMAT_KEY => DateTime::ATOM])]
+    #[Context([DateTimeNormalizer::FORMAT_KEY => DateTimeInterface::ATOM])]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $startAt = null;
+    private ?DateTimeInterface $startAt = null;
 
-    #[Groups(['user:events'])]
+    #[Assert\NotBlank]
+    #[Groups(['user:events', 'event:read'])]
     #[SerializedName('end')]
-    #[Context([DateTimeNormalizer::FORMAT_KEY => DateTime::ATOM])]
+    #[Context([DateTimeNormalizer::FORMAT_KEY => DateTimeInterface::ATOM])]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $endAt = null;
+    private ?DateTimeInterface $endAt = null;
 
     /**
      * @var Collection<int, User>
@@ -114,24 +118,24 @@ class Event
         return $this;
     }
 
-    public function getStartAt(): ?\DateTimeInterface
+    public function getStartAt(): ?DateTimeInterface
     {
         return $this->startAt;
     }
 
-    public function setStartAt(\DateTimeInterface $startAt): static
+    public function setStartAt(?DateTimeInterface $startAt): static
     {
         $this->startAt = $startAt;
 
         return $this;
     }
 
-    public function getEndAt(): ?\DateTimeInterface
+    public function getEndAt(): ?DateTimeInterface
     {
         return $this->endAt;
     }
 
-    public function setEndAt(\DateTimeInterface $endAt): static
+    public function setEndAt(?DateTimeInterface $endAt): static
     {
         $this->endAt = $endAt;
 

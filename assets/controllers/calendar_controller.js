@@ -21,11 +21,14 @@ export default class extends Controller {
 
     static targets = [ "root", "date" ]
 
+    static outlets = [ "modal" ]
+
     /** @type {Map<string, CalendarEvent[]>} */
     #eventsMap = new Map()
 
     async connect() {
         const events = await fetchEvent('/api/events/user/2')
+        console.log(events)
 
         this.#eventsMap = new Map()
         this.month = new Date().getMonth()
@@ -46,6 +49,14 @@ export default class extends Controller {
     next() {
         this.month += 1
         this.#navigate()
+    }
+
+    create() {
+        if (!this.hasModalOutlet) {
+            return
+        }
+
+        this.modalOutlet.open()
     }
 
     /**

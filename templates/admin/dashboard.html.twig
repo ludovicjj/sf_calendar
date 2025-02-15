@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
+{% form_theme form 'form/form_theme.html.twig' %}
 
 {% block body %}
-   <div id="app" data-controller="calendar" class="p-8">
+   <div id="app"
+        data-controller="calendar"
+        data-calendar-modal-outlet=".modal"
+        class="p-8"
+   >
       <div class="flex justify-between mb-4">
          <div class="flex items-center gap-4">
             <div class="flex items-center gap-4">
@@ -55,7 +60,7 @@
 
             {# Content when no events #}
             <div class="flex flex-col items-center justify-center flex-1">
-               {{ ux_icon('custom:cactus', {fill: 'none', class: 'w-[300px] h-[150px]'}) }}
+               {{ ux_icon('cactus', {fill: 'none', class: 'w-[300px] h-[150px]'}) }}
                <p class="font-medium text-sm text-gray-600 text-center mt-2">
                   Il n'y a pas d'éléments sur la période sélectionnée
                </p>
@@ -65,9 +70,41 @@
       </div>
    </div>
 
-   <div id="modal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="modal-title">
-      <div class="modal-wrapper">
-         <h2 id="modal-title">Ajout un evenement</h2>
+   <div id="modal"
+        class="modal"
+        aria-hidden="true"
+        role="dialog"
+        aria-labelledby="modal-title"
+        style="display: none"
+        data-controller="modal datepicker"
+        data-action="keydown.esc@window->event-modal#close"
+   >
+      <div
+           class="modal-wrapper rounded-lg"
+           data-modal-target="wrapper"
+      >
+         <div class="modal-header flex justify-between mb-3">
+            <h2 id="modal-title" class="text-md font-medium text-gray-800">
+               Ajouter un événement
+            </h2>
+
+            <button type="button" data-action="click->modal#close">
+               {{ ux_icon('material-symbols:close-rounded', { class: 'w-5 h-5' }) }}
+            </button>
+         </div>
+
+         <div class="modal-body">
+            {{ form_start(form, {'attr': {'autocomplete': 'off', 'data-action': "submit->modal#onSubmit", 'data-modal-target': 'form'}}) }}
+            {{ form_row(form.name) }}
+            {{ form_row(form.startAt, {'attr': {'data-datepicker-target': 'start'}}) }}
+            {{ form_row(form.endAt, {'attr': {'data-datepicker-target': 'end'}}) }}
+            {{ form_row(form.description, {'attr': {'class': 'h-32'}}) }}
+            {{ form_row(form.fullDay, {'attr': {'data-datepicker-target': 'checkbox'}}) }}
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" formnovalidate>
+               Enregistrer
+            </button>
+            {{ form_end(form) }}
+         </div>
       </div>
    </div>
 {% endblock %}

@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body.modal-open {
+    max-height: 100vh;
+    overflow: hidden;
+}

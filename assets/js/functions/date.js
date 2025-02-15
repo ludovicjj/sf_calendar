@@ -183,6 +183,8 @@ export async function fetchEvent(url)
         return []
     }
 
+    console.log(data.events)
+
     return data.events
         .map(event => formatEvent(event))
         .filter(event => event !== null);
@@ -195,8 +197,8 @@ function formatEvent(event) {
     try {
         return {
             ...event,
-            start: parseDate(event.start),
-            end: parseDate(event.end),
+            start: parseDateWithoutTimezone(event.start),
+            end: parseDateWithoutTimezone(event.end),
         };
     } catch (error) {
         console.error('Error parsing event dates:', error);
@@ -208,10 +210,7 @@ function formatEvent(event) {
  * Transforme des date au format string en object Date
  * @param {string} dateString
  */
-function parseDate(dateString) {
-    const date = new Date(dateString);
-    if (isNaN(date.valueOf())) {
-        throw new Error(`Invalid date: ${dateString}`);
-    }
-    return date;
+function parseDateWithoutTimezone(dateString) {
+    const iso = new Date(dateString).toISOString().slice(0, -1)
+    return new Date(iso);
 }

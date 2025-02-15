@@ -1,0 +1,22 @@
+{% block form_row %}
+    {% if form.vars.block_prefixes is not empty and 'checkbox' in form.vars.block_prefixes %}
+        <div class="mb-4 flex items-center">
+            {{ form_widget(form, {'attr': {'class': 'mr-2'}}) }}
+            {{ form_label(form, null, {'class': 'text-sm font-medium text-gray-700'}) }}
+            {{ form_errors(form) }}
+        </div>
+    {% else %}
+        <div class="mb-4">
+            {{ form_label(form, null, {'class': 'block w-full text-sm font-medium'}) }}
+
+            {% set custom_class = attr.class|default('') %}
+            {% set default_class = 'mt-1 p-2 border rounded w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500' %}
+            {% set widget_class = (default_class ~ ' ' ~ custom_class)|trim %}
+
+            {{ form_widget(form, {'attr': {'class': widget_class}}) }}
+            {% if not form.vars.valid %}
+                <p class="text-red-500 text-sm mt-1">{{ form_errors(form) }}</p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
