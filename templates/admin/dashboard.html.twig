@@ -2,8 +2,12 @@
 {% form_theme form 'form/form_theme.html.twig' %}
 
 {% block body %}
+   <header class="pt-8 px-8">
+      <h1 class="text-3xl font-medium pb-8">Calendrier</h1>
+      <hr>
+   </header>
    <div id="calendar"
-        data-controller="calendar"
+        data-controller="calendar event"
         data-calendar-modal-outlet=".modal"
         class="p-8"
    >
@@ -11,9 +15,9 @@
          <div class="flex items-center gap-4">
             <div class="flex items-center gap-4">
                <button type="button" class="border border-grey-900
-               px-6 py-2 rounded-lg font-medium
-               transition-colors duration-200 ease-in-out
-               hover:bg-gray-200 focus:outline-none"
+                  px-6 py-2 rounded-lg font-medium
+                  transition-colors duration-200 ease-in-out
+                  hover:bg-gray-200 focus:outline-none"
                >
                   Aujourd'hui
                </button>
@@ -47,7 +51,7 @@
                     class="border border-grey-900 p-2 rounded-lg
                            transition-colors duration-200 ease-in-out
                            hover:bg-gray-200 focus:outline-none"
-                    data-action="click->calendar#create"
+                    data-action="click->calendar#createModal"
             >
                {{ ux_icon('tabler:plus', { class: 'w-6 h-6' }) }}
             </button>

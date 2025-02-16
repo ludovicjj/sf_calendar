@@ -1,4 +1,9 @@
-{{ form_start(form, {'attr': {'autocomplete': 'off', 'data-action': "submit->event#onCreate", 'data-event-target': 'form'}}) }}
+{{ form_start(form, {'attr': {
+    'autocomplete': 'off',
+    'data-action': "submit->event#onCreate",
+    'data-event-target': 'form',
+    'data-modal-target': 'form',
+}}) }}
     {{ form_row(form.name) }}
 
     {{ form_row(form.startAt, {'attr': {

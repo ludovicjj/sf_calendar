@@ -51,12 +51,23 @@ export default class extends Controller {
         this.#navigate()
     }
 
-    create() {
+    createModal() {
         if (!this.hasModalOutlet) {
             return
         }
 
         this.modalOutlet.open()
+    }
+
+    updateModal(e) {
+        const eventElement = e.currentTarget
+        const id = eventElement.dataset.id;
+        const key = eventElement.dataset.eventKey
+
+        const calendarEvent = this.getEventByKeyAndId(key, parseInt(id, 10))
+        if (calendarEvent) {
+            this.modalOutlet.update(calendarEvent)
+        }
     }
 
     /**
@@ -188,6 +199,9 @@ export default class extends Controller {
 
         for (const event of events) {
             const classes = ['calendar_event']
+            const eventId = getDayId(event.start)
+
+            // Couleur d'un évènement
             if (event.type) {
                 classes.push('calendar_event-' + event.type)
             }
@@ -196,7 +210,7 @@ export default class extends Controller {
             // Début d'un évènement sur plusieurs jours
             if (
                 event.fullDay &&
-                (dayId === getDayId(event.start) || date.getDay() === 1)
+                (dayId === eventId || date.getDay() === 1)
             ) {
                 const position = getAvailablePosition()
                 positionMap.set(event, position);
@@ -204,7 +218,7 @@ export default class extends Controller {
 
                 const days = diffInDay(date, endDate)
 
-                if (dayId !== getDayId(event.start)) {
+                if (dayId !== eventId) {
                     classes.push('calendar_event-overflow-left')
                 }
                 if (endDate !== event.end) {
@@ -230,9 +244,24 @@ export default class extends Controller {
             // Début d'un évènement un seul jour
             if (!event.fullDay) {
                 classes.push('calendar_event-hour')
-                eventContainer.insertAdjacentHTML('beforeend', `<div class="${classes.join(' ')}">
-                    <span>${timeFormatter.format(event.start)} - ${event.name}</span>
-                </div>`)
+
+                // Formater l'heure de début de l'événement
+                const formattedStartTime = timeFormatter.format(event.start);
+
+                // Créer l'élément HTML à insérer dans le calendrier
+                const eventHTML = `
+                    <div 
+                        class="${classes.join(' ')}" 
+                        data-action="click->calendar#updateModal" 
+                        data-id="${event.id}"
+                        data-event-key="${eventId}"
+                    >
+                        <span>${formattedStartTime} - ${event.name}</span>
+                    </div>
+                `;
+
+                // Insérer l'élément dans le conteneur d'événements
+                eventContainer.insertAdjacentHTML('beforeend', eventHTML);
             }
         }
 
@@ -253,6 +282,23 @@ export default class extends Controller {
         row.setAttribute('role', 'row-group')
 
         return row
+    }
+
+    /**
+     * @param {string} key
+     * @param {number} id
+     * @return {CalendarEvent|null}
+     */
+    getEventByKeyAndId(key, id) {
+        const eventsMap =  this.#eventsMap.get(key) || []
+
+        for (let event of eventsMap) {
+            if (event.id === id) {
+                return event
+            }
+        }
+
+        return null
     }
 
     /**
