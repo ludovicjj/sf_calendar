@@ -8,7 +8,8 @@ import {addDays,
     getDaysBetween,
     minDates,
     startOfWeek,
-    fetchEvent
+    fetchEvent,
+    formatEvent
 } from "../js/functions/date.js";
 
 /** @typedef {{name: string, start: Date, end: Date, fullDay?: boolean, type?: string}} CalendarEvent */
@@ -28,7 +29,6 @@ export default class extends Controller {
 
     async connect() {
         const events = await fetchEvent('/api/events/user/2')
-        console.log(events)
 
         this.#eventsMap = new Map()
         this.month = new Date().getMonth()
@@ -57,6 +57,35 @@ export default class extends Controller {
         }
 
         this.modalOutlet.open()
+    }
+
+    /**
+     * Ajoute une event au calendrier
+     *
+     * @param {{name: string, start: string, end: string, fullDay: boolean, type: string}} data
+     */
+    addEventAndRender(data) {
+        const event = formatEvent(data)
+
+        const days = getDaysBetween(event.start, event.end);
+        for (const day of days) {
+            const id = getDayId(day);
+
+            // Récupère la liste actuelle d'événements pour ce jour (ou initialise un tableau vide)
+            const currentEvents = this.#eventsMap.get(id) || [];
+
+            // Ajouter le nouvel événement à la liste
+            currentEvents.push(event);
+
+            // Trier la liste par date de début
+            currentEvents.sort((a, b) => a.start < b.start ? -1 : 1);
+
+            // Mettre à jour la Map avec la nouvelle liste triée
+            this.#eventsMap.set(id, currentEvents);
+        }
+
+        // Rafraîchir l'affichage du calendrier
+        this.#render();
     }
 
     /**
@@ -216,98 +245,6 @@ export default class extends Controller {
         }
 
         return cell
-    }
-
-    #buildCell(date, month, positionMap) {
-        const getAvailablePosition = () => {
-            if (positionMap.size === 0) {
-                return 0;
-            }
-            const positions = Array.from(positionMap.values());
-            const max = Math.max(...positions);
-            for (let i = 0; i < max; i++) {
-                if (!positions.includes(i)) {
-                    return i;
-                }
-            }
-            return max + 1;
-        }
-        const td = document.createElement('td')
-        const dayId = getDayId(date)
-        const currentDayId = getDayId(new Date())
-        const isCurrentMonth = date.getMonth() === month
-        const isCurrentDay = currentDayId === dayId
-
-        if (isCurrentDay) {
-            td.classList.add('current-day')
-        }
-
-        td.innerHTML = `<div class="calendar_cell">
-            <div class="calendar_date${isCurrentMonth ? '' : ' calendar_date-diff'}">${date.getDate()}</div>
-            <div class="calendar_events"></div>
-        </div>`
-
-        const eventContainer = td.querySelector('.calendar_events')
-        const events = this.#eventsMap.get(dayId) || []
-        const finishedEvents = [];
-
-        for (const event of events) {
-            const classes = ['calendar_event']
-            if (event.type) {
-                classes.push('calendar_event-' + event.type)
-            }
-
-
-            // Début d'un évènement sur plusieurs jours
-            if (
-                event.fullDay &&
-                (dayId === getDayId(event.start) || date.getDay() === 1)
-            ) {
-                const position = getAvailablePosition()
-                positionMap.set(event, position);
-                const endDate =  minDates([event.end, endOfWeek(date)])
-
-                const days = diffInDay(date, endDate)
-
-                if (dayId !== getDayId(event.start)) {
-                    classes.push('calendar_event-overflow-left')
-                }
-                if (endDate !== event.end) {
-                    classes.push('calendar_event-overflow-right')
-                }
-                classes.push('calendar_event-fullday')
-
-                eventContainer.insertAdjacentHTML(
-                    'beforeend',
-                    `<div 
-                        class="${classes.join(' ')}"
-                        style="--days:${days}; --offset:${position}"
-                    >
-                        ${event.name}
-                    </div>`
-                )
-            }
-
-            if (event.fullDay && dayId === getDayId(event.end)) {
-                finishedEvents.push(event)
-            }
-
-            // Début d'un évènement un seul jour
-            if (!event.fullDay) {
-                classes.push('calendar_event-hour')
-                eventContainer.insertAdjacentHTML('beforeend', `<div class="${classes.join(' ')}">
-                    <span>${timeFormatter.format(event.start)} - ${event.name}</span>
-                </div>`)
-            }
-        }
-
-        eventContainer.style.setProperty('--offset', (Math.max(...positionMap.values()) + 1).toString())
-
-        for (const event of finishedEvents) {
-            positionMap.delete(event)
-        }
-
-        return td
     }
 
     createMonthRow() {

@@ -4,6 +4,8 @@ namespace App\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -16,10 +18,11 @@ class EventType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Nom'
+                'label' => "Nom de l'événement"
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'Commentaire'
+                'label' => 'Commentaire',
+                'label_html' => true
             ])
             ->add('startAt', DateTimeType::class, [
                 'label' => "Date de début",
@@ -32,6 +35,18 @@ class EventType extends AbstractType
                 'widget' => 'single_text',
                 'format' => 'dd-MM-yyyy HH:mm',
                 'html5' => false,
+            ])
+            ->add('type', ChoiceType::class, [
+                'label' => false,
+                'choices' => [
+                    '#3788d8' => 'blue',
+                    '#74b057' => 'green',
+                    '#ff5858' => 'red',
+                    '#fcd34d' => 'yellow',
+                    '#9ca3af' => 'gray'
+                ],
+                'expanded' => true,
+                'multiple' => false,
             ])
             ->add('fullDay', CheckboxType::class, [
                 'label' => "fullday",

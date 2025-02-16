@@ -183,8 +183,6 @@ export async function fetchEvent(url)
         return []
     }
 
-    console.log(data.events)
-
     return data.events
         .map(event => formatEvent(event))
         .filter(event => event !== null);
@@ -193,7 +191,7 @@ export async function fetchEvent(url)
 /**
  * @param {object} event
  */
-function formatEvent(event) {
+export function formatEvent(event) {
     try {
         return {
             ...event,

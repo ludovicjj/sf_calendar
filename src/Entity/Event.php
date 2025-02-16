@@ -48,6 +48,7 @@ class Event
     private ?DateTimeInterface $startAt = null;
 
     #[Assert\NotBlank]
+    #[Assert\GreaterThan(propertyPath: 'startAt')]
     #[Groups(['user:events', 'event:read'])]
     #[SerializedName('end')]
     #[Context([DateTimeNormalizer::FORMAT_KEY => DateTimeInterface::ATOM])]

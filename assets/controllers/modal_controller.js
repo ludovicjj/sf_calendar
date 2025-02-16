@@ -1,7 +1,4 @@
 import { Controller } from '@hotwired/stimulus';
-import AirDatepicker from 'air-datepicker'
-import '../styles/air-datepicker.css';
-import localeFr from '../js/locales/fr.js';
 import '../styles/modal.css';
 
 export default class extends Controller {
@@ -39,47 +36,6 @@ export default class extends Controller {
 
         this.element.setAttribute('aria-hidden', 'true')
         this.element.removeAttribute('aria-modal')
-    }
-
-    async onSubmit(e) {
-        e.preventDefault()
-
-        if (!this.hasFormTarget) {
-            return
-        }
-
-        const formData = new FormData(this.formTarget)
-        const jsonData = this.serializeFormData(formData)
-
-        const response = await fetch(this.formTarget.action, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            },
-            body: JSON.stringify(jsonData),
-        })
-
-        const data = await response.json()
-        console.log(data)
-    }
-
-    serializeFormData(formData) {
-        let object = {};
-        formData.forEach((value, key) => {
-            if (key.includes("At")) {
-                value = this.formatDate(value); // Transforme les dates
-            }
-            object[key] = value;
-        });
-
-        return object;
-    }
-
-    formatDate(dateString) {
-        if (!dateString) return null;
-        const [day, month, year, hours, minutes] = dateString.match(/\d+/g);
-        return `${year}-${month}-${day}T${hours}:${minutes}:00`; // Format ISO 8601
     }
 
     stopPropagation(e) {

@@ -119,11 +119,15 @@
 .calendar_event-red {
     --color: #ff5858
 }
-
 .calendar_event-blue {
     --color: #3788d8;
 }
-
 .calendar_event-green {
     --color: #74b057;
+}
+.calendar_event-yellow {
+    --color: #fcd34d;
+}
+.calendar_event-gray {
+    --color: #9ca3af;
 }

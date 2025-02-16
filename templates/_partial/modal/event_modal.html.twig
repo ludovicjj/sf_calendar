@@ -1,0 +1,29 @@
+<div id="modal"
+     class="modal"
+     aria-hidden="true"
+     role="dialog"
+     aria-labelledby="modal-title"
+     style="display: none"
+     data-controller="modal datepicker event"
+     data-action="keydown.esc@window->modal#close"
+     data-event-calendar-outlet="#calendar"
+>
+    <div
+            class="modal-wrapper rounded-lg"
+            data-modal-target="wrapper"
+    >
+        <div class="modal-header flex justify-between mb-3">
+            <h2 id="modal-title" class="text-md font-medium text-gray-800">
+                Ajouter un événement
+            </h2>
+
+            <button type="button" data-action="click->modal#close">
+                {{ ux_icon('material-symbols:close-rounded', { class: 'w-5 h-5' }) }}
+            </button>
+        </div>
+
+        <div class="modal-body">
+            {% include '_partial/form/event_form.html.twig' %}
+        </div>
+    </div>
+</div>
