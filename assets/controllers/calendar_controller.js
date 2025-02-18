@@ -66,7 +66,7 @@ export default class extends Controller {
 
         const calendarEvent = this.getEventByKeyAndId(key, parseInt(id, 10))
         if (calendarEvent) {
-            this.modalOutlet.update(calendarEvent)
+            this.modalOutlet.open(calendarEvent)
         }
     }
 
