@@ -170,8 +170,9 @@ export default class extends Controller {
             }
             return max + 1;
         }
+
         const cell = document.createElement('div')
-        cell.classList.add('month-cell')
+        cell.classList.add('calendar-cell')
 
 
         const dayId = getDayId(date)
@@ -183,7 +184,7 @@ export default class extends Controller {
             cell.classList.add('current-day')
         }
         if (!isCurrentMonth) {
-            cell.classList.add('month-cell-out')
+            cell.classList.add('calendar-cell-out')
         }
 
         cell.innerHTML = `
@@ -278,7 +279,7 @@ export default class extends Controller {
 
     createMonthRow() {
         const row = document.createElement('div')
-        row.classList.add('calendar-month-row')
+        row.classList.add('calendar-row')
         row.setAttribute('role', 'row-group')
 
         return row

@@ -24,60 +24,62 @@
     padding: 0 .5rem;
 }
 /* CALENDAR BODY */
-.calendar .calendar-month-row {
+.calendar .calendar-row
+{
     display: flex;
     flex-direction: row;
 }
-.calendar .calendar-month-row:not(:last-child) {
+.calendar .calendar-row:not(:last-child) {
     border-bottom: 1px solid rgba(155, 154, 154, .3);
 }
-.calendar .calendar-month-row .month-cell {
+.calendar .calendar-cell {
     flex: 1 0 0;
     aspect-ratio: 1;
     padding: var(--cell-padding);
     width: calc(100% / 7); /* usefull for text-overflow: ellipsis */
 }
-.calendar .calendar-month-row .month-cell.current-day {
+.calendar .calendar-cell.current-day {
     background-color: rgba(239, 246, 255, 1);
 }
-.calendar .calendar-month-row .month-cell:not(:last-child) {
+.calendar .calendar-cell:not(:last-child) {
     border-right: 1px solid rgba(155, 154, 154, .3);
 }
-.calendar .calendar-month-row .month-cell.month-cell-out {
+.calendar .calendar-cell.calendar-cell-out {
     background: repeating-linear-gradient(
             -30deg,
             rgb(247, 249, 252), rgb(247, 249, 252) 12px,
             rgb(235, 240, 245) 10px, rgb(235, 240, 245) 13px
     );
 }
-.calendar .calendar-month-row .month-cell.month-cell-out .calendar_date {
+.calendar .calendar-row .calendar-cell.calendar-cell-out .calendar_date {
     opacity: .3;
 }
 
-.calendar .calendar-month-row .month-cell .calendar_events {
+.calendar .calendar-row .calendar-cell .calendar_events {
     font-size: .75rem;
     position: relative;
     padding-top: calc(var(--offset) * 24px);
 }
-.calendar .calendar-month-row .month-cell .calendar_date {
+.calendar .calendar-row .calendar-cell .calendar_date {
     text-align: center;
 }
-.calendar .calendar-month-row .month-cell .calendar_event {
+.calendar .calendar-row .calendar-cell .calendar_event {
     cursor: pointer;
 }
+
 /* Event on a SINGLE day */
-.calendar .calendar-month-row .month-cell .calendar_event-hour {
+.calendar .calendar-row .calendar-cell .calendar_event-hour {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
-.calendar .calendar-month-row .month-cell .calendar_event-hour span{
+.calendar .calendar-row .calendar-cell .calendar_event-hour span{
     display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.calendar .calendar-month-row .month-cell .calendar_event-hour::before {
+.calendar .calendar-row .calendar-cell .calendar_event-hour::before {
     content: '';
     flex: none;
     width: 8px;
@@ -86,6 +88,7 @@
     border-radius: 50%;
     background-color: var(--color);
 }
+
 /* Event on MANY days */
 .calendar_event-fullday {
     position: absolute;
