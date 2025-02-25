@@ -4,8 +4,9 @@ import CalendarNav from "./CalendarNav";
 import CalendarGrid from "./CalendarGrid";
 import {getDayId, getDaysBetween} from "../../../js/functions/date";
 import {parseEvent} from "../../utils/eventUtils";
+import PropTypes from "prop-types";
 
-export default function ({ initialEvents }) {
+export default function CalendarApp ({ initialEvents }) {
     // Stocker la date actuelle
     const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -75,3 +76,7 @@ export default function ({ initialEvents }) {
         </div>
     );
 }
+
+CalendarApp.propTypes = {
+    initialEvents: PropTypes.instanceOf(Array).isRequired,
+};

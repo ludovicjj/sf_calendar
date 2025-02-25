@@ -28,6 +28,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "air-datepicker": "^3.5.3"
+        "air-datepicker": "^3.5.3",
+        "prop-types": "^15.8.1"
     }
 }

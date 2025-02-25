@@ -1,5 +1,6 @@
 import React from 'react';
 import {diffInDay, endOfWeek, getDayId, minDates} from "../../../js/functions/date";
+import PropTypes from "prop-types";
 
 const timeFormatter = new Intl.DateTimeFormat(undefined, {
     hour: '2-digit',
@@ -28,17 +29,19 @@ const getAvailablePosition = (positionMap) => {
 
     return max + 1;
 }
-export default function ({ currentDate, dayOfWeek, eventsMap, positionMap }) {
+export default function CalendarCell ({ currentDate, dayOfWeek, eventsMap, positionMap }) {
     const isCurrentMonth = dayOfWeek.getMonth() === currentDate.getMonth()
     const isCurrentDay = dayOfWeek.toDateString() === new Date().toDateString()
 
     const dayId = getDayId(dayOfWeek)
+
+    // Récupère les évènements pour une journée donnée
     const dayEvents = eventsMap.get(dayId) || []
 
     // Hydrate positionMap avec les évènements sur plusieurs jours
     dayEvents.forEach((event) => {
         const startId = getDayId(event.start)
-        if (event.fullDay && startId === dayId) {
+        if (event.fullDay && (startId === dayId || dayOfWeek.getDay() === 1)) {
             const position = getAvailablePosition(positionMap);
             positionMap.set(event, position);
         }
@@ -76,14 +79,14 @@ export default function ({ currentDate, dayOfWeek, eventsMap, positionMap }) {
             >
                 {dayEvents.map((event, index) => {
                     const eventClasses = ['calendar_event']
-                    const eventId = getDayId(event.start)
+                    const eventStartId = getDayId(event.start)
 
                     // Couleur d'un évènement
                     if (event.type) {
                         eventClasses.push('calendar_event-' + event.type)
                     }
 
-                    if (event.fullDay && eventId === dayId) {
+                    if (event.fullDay && (eventStartId === dayId || dayOfWeek.getDay() === 1)) {
                         eventClasses.push('calendar_event-fullday')
                         const position = positionMap.get(event);
 
@@ -91,6 +94,14 @@ export default function ({ currentDate, dayOfWeek, eventsMap, positionMap }) {
                         const endDate =  minDates([event.end, endOfWeek(dayOfWeek)])
                         // Calcule le nb de jours entre le jour en cours d'itération et la fin de l'évènement
                         const days = diffInDay(dayOfWeek, endDate)
+
+                        if (dayId !== eventStartId) {
+                            eventClasses.push('calendar_event-overflow-left')
+                        }
+
+                        if (endDate !== event.end) {
+                            eventClasses.push('calendar_event-overflow-right')
+                        }
 
                         return (
                             <div
@@ -132,3 +143,10 @@ export default function ({ currentDate, dayOfWeek, eventsMap, positionMap }) {
         </div>
     );
 }
+
+CalendarCell.propTypes = {
+    currentDate: PropTypes.instanceOf(Date).isRequired,
+    dayOfWeek: PropTypes.instanceOf(Date).isRequired,
+    eventsMap: PropTypes.instanceOf(Map).isRequired,
+    positionMap: PropTypes.instanceOf(Map).isRequired,
+};

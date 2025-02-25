@@ -1,8 +1,9 @@
 import React from 'react';
 import {endOfMonth, endOfWeek, getDaysBetween, startOfWeek} from "../../../js/functions/date";
 import CalendarCell from "./CalendarCell";
+import PropTypes from "prop-types";
 
-export default function ({currentDate, eventsMap}) {
+export default function CalendarRow ({currentDate, eventsMap}) {
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0)
     const start = startOfWeek(firstDayOfMonth)
     const end = endOfWeek(endOfMonth(firstDayOfMonth))
@@ -39,3 +40,8 @@ export default function ({currentDate, eventsMap}) {
         </div>
     );
 }
+
+CalendarRow.propTypes = {
+    currentDate: PropTypes.instanceOf(Date).isRequired,
+    eventsMap: PropTypes.instanceOf(Map).isRequired,
+};

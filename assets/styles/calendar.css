@@ -5,6 +5,7 @@
     --color: #3788d8;
     --cell-padding: .5rem;
 }
+
 /* CALENDAR HEADER */
 .calendar .calendar-month-header {
     display: flex;
@@ -23,6 +24,7 @@
     color: rgb(101, 119, 140);
     padding: 0 .5rem;
 }
+
 /* CALENDAR BODY */
 .calendar .calendar-row
 {
@@ -114,10 +116,10 @@
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
 }
-
 .calendar_event-overflow-right.calendar_event-overflow-left {
     --overflow: calc(var(--cell-padding) * 2);
 }
+
 /* Event color */
 .calendar_event-red {
     --color: #ff5858
