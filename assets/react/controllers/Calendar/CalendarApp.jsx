@@ -2,18 +2,24 @@ import React, { useState } from 'react';
 import Header from '../Header';
 import CalendarNav from "./CalendarNav";
 import CalendarGrid from "./CalendarGrid";
-import {getDayId, getDaysBetween} from "../../../js/functions/date";
+import {getDayId, getDaysBetween} from "../../utils/dateUtils";
 import {parseEvent} from "../../utils/eventUtils";
 import PropTypes from "prop-types";
+import CalendarModal from "./CalendarModal";
 
 export default function CalendarApp ({ initialEvents }) {
-    // Stocker la date actuelle
+    // State current Date
     const [currentDate, setCurrentDate] = useState(new Date());
 
-    const parsedEvents = parseEvent(initialEvents);
+    // State for modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Stocker les événements dans un Map (key : Y-m-d, value: array of object)
+    // State selected event
+    const [selectedEvent, setSelectedEvent] = useState(null);
+
+    // State Events list
     const [eventsMap, setEventsMap] = useState(() => {
+        const parsedEvents = parseEvent(initialEvents);
         const map = new Map();
 
         // sort formatted Events
@@ -62,16 +68,27 @@ export default function CalendarApp ({ initialEvents }) {
         });
     };
 
+    // Fonction pour ouvrir la modale
+    const openModal = (event = null) => {
+        setSelectedEvent(event);
+        setIsModalOpen(true);
+    };
+
     return (
         <div className="p-8">
             <Header title="Calendrier" />
             <CalendarNav
                 currentDate={currentDate}
                 setCurrentDate={setCurrentDate}
+                setIsModalOpen={setIsModalOpen}
             />
             <CalendarGrid
                 currentDate={currentDate}
                 eventsMap={eventsMap}
+            />
+            <CalendarModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
             />
         </div>
     );

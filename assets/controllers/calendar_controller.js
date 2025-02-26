@@ -1,16 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
 import '../styles/calendar.css';
-import {addDays,
-    diffInDay,
-    endOfMonth,
-    endOfWeek,
-    getDayId,
-    getDaysBetween,
-    minDates,
-    startOfWeek,
-    fetchEvent,
-    formatEvent
-} from "../js/functions/date.js";
 
 /** @typedef {{name: string, start: Date, end: Date, fullDay?: boolean, type?: string}} CalendarEvent */
 
@@ -28,18 +17,18 @@ export default class extends Controller {
     #eventsMap = new Map()
 
     async connect() {
-        const events = await fetchEvent('/api/events/user/2')
-
-        this.#eventsMap = new Map()
-        this.month = new Date().getMonth()
-        this.year = new Date().getFullYear()
-
-        if (!this.hasRootTarget) {
-            console.error('missing root element')
-        }
-
-        this.#fillEventMap(events)
-        this.#render()
+        // const events = await fetchEvent('/api/events/user/2')
+        //
+        // this.#eventsMap = new Map()
+        // this.month = new Date().getMonth()
+        // this.year = new Date().getFullYear()
+        //
+        // if (!this.hasRootTarget) {
+        //     console.error('missing root element')
+        // }
+        //
+        // this.#fillEventMap(events)
+        // this.#render()
     }
 
     prev() {

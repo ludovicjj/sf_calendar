@@ -1,5 +1,5 @@
 import React from 'react';
-import {endOfMonth, endOfWeek, getDaysBetween, startOfWeek} from "../../../js/functions/date";
+import {endOfMonth, endOfWeek, getDaysBetween, startOfWeek} from "../../utils/dateUtils";
 import CalendarCell from "./CalendarCell";
 import PropTypes from "prop-types";
 

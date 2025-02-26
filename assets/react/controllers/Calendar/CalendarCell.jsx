@@ -1,5 +1,5 @@
 import React from 'react';
-import {diffInDay, endOfWeek, getDayId, minDates} from "../../../js/functions/date";
+import {diffInDay, endOfWeek, getDayId, minDates} from "../../utils/dateUtils";
 import PropTypes from "prop-types";
 
 const timeFormatter = new Intl.DateTimeFormat(undefined, {

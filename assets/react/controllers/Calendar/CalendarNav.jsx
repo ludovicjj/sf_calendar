@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function ({ currentDate, setCurrentDate }) {
+export default function ({ currentDate, setCurrentDate, setIsModalOpen }) {
     const goToToday = () => {
         setCurrentDate(new Date());
     };
@@ -58,6 +58,7 @@ export default function ({ currentDate, setCurrentDate }) {
                 <button
                     type="button"
                     className="border border-grey-900 p-2 rounded-lg transition-colors duration-200 ease-in-out hover:bg-gray-200 focus:outline-none"
+                    onClick={() => setIsModalOpen(true)}
                 >
                     <svg viewBox="0 0 24 24" className="w-6 h-6">
                         <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v14m-7-7h14"/>
