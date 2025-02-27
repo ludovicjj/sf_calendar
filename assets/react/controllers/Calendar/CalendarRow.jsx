@@ -3,7 +3,7 @@ import {endOfMonth, endOfWeek, getDaysBetween, startOfWeek} from "../../utils/da
 import CalendarCell from "./CalendarCell";
 import PropTypes from "prop-types";
 
-export default function CalendarRow ({currentDate, eventsMap}) {
+export default function CalendarRow ({currentDate, eventsMap, openModal}) {
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0)
     const start = startOfWeek(firstDayOfMonth)
     const end = endOfWeek(endOfMonth(firstDayOfMonth))
@@ -32,6 +32,7 @@ export default function CalendarRow ({currentDate, eventsMap}) {
                                 currentDate={currentDate}
                                 eventsMap={eventsMap}
                                 positionMap={positionMap}
+                                openModal={openModal}
                             />
                         ))}
                     </div>
@@ -44,4 +45,5 @@ export default function CalendarRow ({currentDate, eventsMap}) {
 CalendarRow.propTypes = {
     currentDate: PropTypes.instanceOf(Date).isRequired,
     eventsMap: PropTypes.instanceOf(Map).isRequired,
+    openModal: PropTypes.func.isRequired,
 };

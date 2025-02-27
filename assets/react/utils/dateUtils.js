@@ -170,3 +170,22 @@ export function endOfWeek(date) {
 export function getDayId(date) {
     return `${date.getFullYear()}-${date.getMonth().toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
 }
+
+/**
+ * Formate une date au format "dd-mm-yyyy HH:mm"
+ * @param {Date} date
+ * @return string
+ */
+export function formatDateForInput(date) {
+    if (!date) return "";
+
+    const d = new Date(date);
+
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0'); // getMonth() commence à 0
+    const year = d.getFullYear();
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+
+    return `${day}-${month}-${year} ${hours}:${minutes}`;
+}

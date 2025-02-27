@@ -26,7 +26,7 @@ class Event
     #[Assert\NotBlank]
     #[Groups(['user:events', 'event:read'])]
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private ?string $title = null;
 
     #[Groups(['user:events', 'event:read'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -34,7 +34,7 @@ class Event
 
     #[Groups(['user:events', 'event:read'])]
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $type = null;
+    private ?string $color = null;
 
     #[Groups(['user:events', 'event:read'])]
     #[ORM\Column]
@@ -71,14 +71,14 @@ class Event
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getTitle(): ?string
     {
-        return $this->name;
+        return $this->title;
     }
 
-    public function setName(string $name): static
+    public function setTitle(string $title): static
     {
-        $this->name = $name;
+        $this->title = $title;
 
         return $this;
     }
@@ -95,14 +95,14 @@ class Event
         return $this;
     }
 
-    public function getType(): ?string
+    public function getColor(): ?string
     {
-        return $this->type;
+        return $this->color;
     }
 
-    public function setType(?string $type): static
+    public function setColor(?string $color): static
     {
-        $this->type = $type;
+        $this->color = $color;
 
         return $this;
     }

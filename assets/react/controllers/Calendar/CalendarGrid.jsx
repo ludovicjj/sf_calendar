@@ -2,7 +2,7 @@ import React from 'react';
 import CalendarRow from "./CalendarRow";
 import PropTypes from "prop-types";
 
-export default function CalendarGrid ({ currentDate, eventsMap }) {
+export default function CalendarGrid ({ currentDate, eventsMap, openModal }) {
     const weekDays = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 
     return (
@@ -17,6 +17,7 @@ export default function CalendarGrid ({ currentDate, eventsMap }) {
             <CalendarRow
                 currentDate={currentDate}
                 eventsMap={eventsMap}
+                openModal={openModal}
             />
         </div>
     );
@@ -25,4 +26,5 @@ export default function CalendarGrid ({ currentDate, eventsMap }) {
 CalendarGrid.propTypes = {
     currentDate: PropTypes.instanceOf(Date).isRequired,
     eventsMap: PropTypes.instanceOf(Map).isRequired,
+    openModal: PropTypes.func.isRequired,
 };

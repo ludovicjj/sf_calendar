@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Header from '../Header';
 import CalendarNav from "./CalendarNav";
 import CalendarGrid from "./CalendarGrid";
@@ -69,10 +69,15 @@ export default function CalendarApp ({ initialEvents }) {
     };
 
     // Fonction pour ouvrir la modale
-    const openModal = (event = null) => {
+    const openModal = useCallback((event = null) => {
         setSelectedEvent(event);
         setIsModalOpen(true);
-    };
+    }, [])
+
+    const closeModal = useCallback(() => {
+        setSelectedEvent(null)
+        setIsModalOpen(false);
+    }, [])
 
     return (
         <div className="p-8">
@@ -85,10 +90,12 @@ export default function CalendarApp ({ initialEvents }) {
             <CalendarGrid
                 currentDate={currentDate}
                 eventsMap={eventsMap}
+                openModal={openModal}
             />
             <CalendarModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                closeModal={closeModal}
+                selectedEvent={selectedEvent}
             />
         </div>
     );

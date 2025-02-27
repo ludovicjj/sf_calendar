@@ -29,7 +29,7 @@ const getAvailablePosition = (positionMap) => {
 
     return max + 1;
 }
-export default function CalendarCell ({ currentDate, dayOfWeek, eventsMap, positionMap }) {
+export default function CalendarCell ({ currentDate, dayOfWeek, eventsMap, positionMap, openModal }) {
     const isCurrentMonth = dayOfWeek.getMonth() === currentDate.getMonth()
     const isCurrentDay = dayOfWeek.toDateString() === new Date().toDateString()
 
@@ -82,10 +82,11 @@ export default function CalendarCell ({ currentDate, dayOfWeek, eventsMap, posit
                     const eventStartId = getDayId(event.start)
 
                     // Couleur d'un évènement
-                    if (event.type) {
-                        eventClasses.push('calendar_event-' + event.type)
+                    if (event.color) {
+                        eventClasses.push('calendar_event-' + event.color)
                     }
 
+                    // évènement sur plusieurs jours
                     if (event.fullDay && (eventStartId === dayId || dayOfWeek.getDay() === 1)) {
                         eventClasses.push('calendar_event-fullday')
                         const position = positionMap.get(event);
@@ -112,15 +113,17 @@ export default function CalendarCell ({ currentDate, dayOfWeek, eventsMap, posit
                                 key={index}
                                 className={eventClasses.join(' ')}
                             >
-                                {event.name}
+                                {event.title}
                             </div>
                         );
                     }
 
+                    // Nettoyage de la Map
                     if (event.fullDay && dayId === getDayId(event.end)) {
                         positionMap.delete(event)
                     }
 
+                    // évènement sur un jour
                     if (!event.fullDay) {
                         eventClasses.push('calendar_event-hour')
                         const formattedStartTime = timeFormatter.format(new Date(event.start));
@@ -131,9 +134,10 @@ export default function CalendarCell ({ currentDate, dayOfWeek, eventsMap, posit
                                 className={eventClasses.join(' ')}
                                 data-id={event.id}
                                 data-event-key={event.id}
+                                onClick={() => openModal(event)}
                             >
                                 <span>
-                                    {formattedStartTime} - {event.name}
+                                    {formattedStartTime} - {event.title}
                                 </span>
                             </div>
                         );
@@ -149,4 +153,5 @@ CalendarCell.propTypes = {
     dayOfWeek: PropTypes.instanceOf(Date).isRequired,
     eventsMap: PropTypes.instanceOf(Map).isRequired,
     positionMap: PropTypes.instanceOf(Map).isRequired,
+    openModal: PropTypes.func.isRequired,
 };

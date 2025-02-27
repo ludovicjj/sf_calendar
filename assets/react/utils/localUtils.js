@@ -1,6 +1,6 @@
 "use strict";
 
-const localeFr = {
+export const localeFr = {
     days: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
     daysShort: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
     daysMin: ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'],
@@ -12,5 +12,3 @@ const localeFr = {
     timeFormat: 'HH:mm',
     firstDay: 1
 }
-
-export default localeFr;
