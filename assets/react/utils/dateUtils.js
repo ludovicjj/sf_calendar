@@ -176,7 +176,7 @@ export function getDayId(date) {
  * @param {Date} date
  * @return string
  */
-export function formatDateForInput(date) {
+export function formatDateToInputDateString(date) {
     if (!date) return "";
 
     const d = new Date(date);
@@ -188,4 +188,42 @@ export function formatDateForInput(date) {
     const minutes = String(d.getMinutes()).padStart(2, '0');
 
     return `${day}-${month}-${year} ${hours}:${minutes}`;
+}
+
+export function formatInputDateStringToDate(dateString) {
+    if (!dateString) {
+        return null
+    }
+
+    // Convertit "DD-MM-YYYY H:i" en "YYYY-MM-DD H:i"
+    const [datePart, timePart] = dateString.split(" ");
+    const [day, month, year] = datePart.split("-");
+    const [hours, minutes] = timePart ? timePart.split(":") : [];
+
+    if (!day || !month || !year) {
+        return null
+    }
+
+    if (!hours || !minutes) {
+        return null;
+    }
+
+    const date = new Date(`${year}-${month}-${day}T${hours}:${minutes}:00`);
+
+    const isDateValid =
+        date.getDate() === parseInt(day, 10) &&
+        date.getMonth() + 1 === parseInt(month, 10) &&
+        date.getFullYear() === parseInt(year, 10);
+
+    // Vérifier si l'heure est valide
+    const isTimeValid =
+        parseInt(hours, 10) >= 0 && parseInt(hours, 10) < 24 &&
+        parseInt(minutes, 10) >= 0 && parseInt(minutes, 10) < 60;
+
+    // Retourner null si la date ou l'heure est invalide
+    if (!isDateValid || !isTimeValid) {
+        return
+    }
+
+    return date;
 }
