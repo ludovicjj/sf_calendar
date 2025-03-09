@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useMemo, useState} from "react";
 import {formatDateToInputDateString, formatInputDateStringToDate} from "../../utils/dateUtils";
 import CalendarDatepicker from "./CalendarDatepicker";
 
@@ -34,16 +34,13 @@ export default function CalendarForm (
             { background: '#9ca3af', value: 'gray' },
         ]
     }, [])
-    console.log(formData)
 
     const handleChange = (e) => {
         const { name, value } = e.target
-        console.log('Handle change : ', name, value)
         let updatedValue = value
         let isValid = value.trim() !== ""
 
         if (['start', 'end'].includes(name)) {
-            console.log('start or end changed !!!!!!!!!!!!!!')
             const result = validateAndFormatDate(value)
             updatedValue = result.formattedValue
             isValid = result.isValid
@@ -60,8 +57,6 @@ export default function CalendarForm (
                 [name]: {isValid, isUpdated: true}
             }));
         }
-
-        console.log(formData)
     };
 
     const handleSubmit = (e) => {
