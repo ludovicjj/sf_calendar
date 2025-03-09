@@ -41,13 +41,18 @@ export default function CalendarApp ({ initialEvents }) {
 
     // Fonction pour ajouter un événement
     const addEvent = (event) => {
-        const dayId = getDayId(new Date(event.start));
         setEventsMap(prevMap => {
             const newMap = new Map(prevMap);
-            if (!newMap.has(dayId)) {
-                newMap.set(dayId, []);
+
+            const days = getDaysBetween(event.start, event.end);
+            for (const day of days) {
+                const key = getDayId(day)
+                if (!newMap.has(key)) {
+                    newMap.set(key, []);
+                }
+                newMap.get(key).push(event);
             }
-            newMap.get(dayId).push(event);
+
             return newMap;
         });
     };
@@ -96,6 +101,7 @@ export default function CalendarApp ({ initialEvents }) {
                 isOpen={isModalOpen}
                 closeModal={closeModal}
                 selectedEvent={selectedEvent}
+                addEvent={addEvent}
             />
         </div>
     );
