@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "air-datepicker": "^3.5.3",
-        "prop-types": "^15.8.1"
+        "prop-types": "^15.8.1",
+        "uuid": "^11.1.0"
     }
 }

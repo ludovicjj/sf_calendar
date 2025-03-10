@@ -17,31 +17,30 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
-    #[Groups(['user:events', 'event:read'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[Assert\NotBlank]
-    #[Groups(['user:events', 'event:read'])]
+    #[Groups(['event:read'])]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[Groups(['user:events', 'event:read'])]
+    #[Groups(['event:read'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[Groups(['user:events', 'event:read'])]
+    #[Groups(['event:read'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $color = null;
 
-    #[Groups(['user:events', 'event:read'])]
+    #[Groups(['event:read'])]
     #[ORM\Column]
     private ?bool $fullDay = null;
 
     #[Assert\NotBlank]
-    #[Groups(['user:events', 'event:read'])]
+    #[Groups(['event:read'])]
     #[SerializedName('start')]
     #[Context([DateTimeNormalizer::FORMAT_KEY => DateTimeInterface::ATOM])]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -49,7 +48,7 @@ class Event
 
     #[Assert\NotBlank]
     #[Assert\GreaterThan(propertyPath: 'startAt')]
-    #[Groups(['user:events', 'event:read'])]
+    #[Groups(['event:read'])]
     #[SerializedName('end')]
     #[Context([DateTimeNormalizer::FORMAT_KEY => DateTimeInterface::ATOM])]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -60,6 +59,10 @@ class Event
      */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'events')]
     private Collection $users;
+
+    #[Groups(['event:read'])]
+    #[ORM\Column(nullable: true)]
+    private ?string $token = null;
 
     public function __construct()
     {
@@ -112,7 +115,7 @@ class Event
         return $this->fullDay;
     }
 
-    public function setFullDay(bool $fullDay): static
+    public function setFullDay(?bool $fullDay): static
     {
         $this->fullDay = $fullDay;
 
@@ -166,6 +169,18 @@ class Event
         if ($this->users->removeElement($user)) {
             $user->removeEvent($this);
         }
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): static
+    {
+        $this->token = $token;
 
         return $this;
     }

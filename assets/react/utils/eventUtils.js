@@ -1,3 +1,5 @@
+import {parseStringToDate} from "./dateUtils";
+
 /**
  * Parse une liste d'événements sans appliquer la timezone du navigateur aux dates de début et de fin.
  *
@@ -8,6 +10,7 @@
  * @param {boolean} initialEvents[].fullDay - Indique si l'événement dure toute la journée.
  * @param {string} initialEvents[].color - Couleur de l'événement (ex: "red", "blue").
  * @param {string|null} initialEvents[].description - Description détaillée de l'événement.
+ * @param {string} initialEvents[].token - Identifiant unique de l'événement (UUID v4).
  * @returns {Array<Object>} Liste des événements avec des objets `Date` au lieu de chaînes pour les dates.
  */
 export function parseEvent(initialEvents) {
@@ -23,6 +26,22 @@ export function parseEvent(initialEvents) {
             return null;
         }
     }).filter(event => event !== null);
+}
+
+/**
+ * Défini si un événement est sur plusieurs jours
+ * @param {string} start
+ * @param {string} end
+ */
+export function isFullDay(start, end) {
+    const startDate = parseStringToDate(start);
+    const endDate = parseStringToDate(end);
+    console.log('start : ', start)
+    console.log('end : ', end)
+    console.log('Start date string : ', startDate.toDateString())
+    console.log('End date string : ', endDate.toDateString())
+
+    return startDate.toDateString() !== endDate.toDateString();
 }
 
 /**

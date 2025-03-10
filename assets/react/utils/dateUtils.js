@@ -227,3 +227,15 @@ export function formatInputDateStringToDate(dateString) {
 
     return date;
 }
+
+/**
+ * Convertit une date "DD-MM-YYYY HH:mm" en objet Date valide "DD-MM-YYYY HH:mm:00"
+ * @param {string} dateString
+ * @return {Date}
+ */
+export function parseStringToDate(dateString) {
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('-');
+
+    return new Date(`${year}-${month}-${day}T${timePart}:00`);
+}

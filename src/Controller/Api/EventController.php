@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\User;
+use App\Exception\ValidationException;
 use App\Factory\ErrorsValidationFactory;
 use App\Factory\EventFactory;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +20,10 @@ class EventController extends AbstractController
         return $this->json($user, 200, [], ['groups' => ['user:events']]);
     }
 
-    #[Route('/api/event', name: 'api_event_create')]
+    /**
+     * @throws ValidationException
+     */
+    #[Route('/api/event', name: 'api_event_create',methods: ['POST'])]
     public function create(
         EventFactory $eventFactory,
         EntityManagerInterface $entityManager,

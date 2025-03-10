@@ -1,6 +1,8 @@
 import React, {useMemo, useState} from "react";
 import {formatDateToInputDateString, formatInputDateStringToDate} from "../../utils/dateUtils";
 import CalendarDatepicker from "./CalendarDatepicker";
+import {isFullDay} from "../../utils/eventUtils";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function CalendarForm (
     {
@@ -59,7 +61,7 @@ export default function CalendarForm (
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const isValid = validateForm();
@@ -69,15 +71,32 @@ export default function CalendarForm (
         }
 
         const event = {
-            id: selectedEvent?.id || 55, // Utilise l'ID existant ou génère un nouvel ID
+            token: selectedEvent?.token || uuidv4(),
             title: formData.title,
             description: formData.description,
             color: formData.color,
             start: formatInputDateStringToDate(formData.start),
             end: formatInputDateStringToDate(formData.end),
+            fullDay: isFullDay(formData.start, formData.end)
         };
 
-        addEvent(event)
+        try {
+            const response = await fetch('/api/event', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(event),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data.event)
+                addEvent(event);
+            }
+        } catch (error) {
+            console.error('Erreur lors de la création de l\'événement :', error);
+        }
     }
 
     const validateAndFormatDate = (inputValue) => {

@@ -22,33 +22,38 @@ readonly class EventFactory
         $request = $this->requestStack->getMainRequest();
         $data = $request->toArray();
 
-        $fullDay = isset($data['fullDay']) && $data['fullDay'];
         /** @var User $user */
         $user = $this->security->getUser();
 
         $startAt = null;
         $endAt = null;
+        $fullDay = null;
         try {
-            $start = $data['startAt'] ?? null;
-            $end = $data['endAt'] ?? null;
+            $start = $data['start'] ?? null;
+            $end = $data['end'] ?? null;
 
             if ($start) {
-                $startAt = new DateTime($data['startAt']);
+                $startAt = new DateTime($data['start']);
             }
 
             if ($end) {
-                $endAt = new DateTime($data['endAt']);
+                $endAt = new DateTime($data['end']);
+            }
+
+            if ($startAt && $endAt) {
+                $fullDay = $startAt->format('Y-m-d') !== $endAt->format('Y-m-d');
             }
         } catch (Exception) {
         }
 
         return (new Event())
-            ->setName($data['name'] ?? null)
+            ->setTitle($data['title'] ?? null)
             ->setDescription($data['description'] ?? null)
-            ->setType($data['type'] ?? 'blue')
+            ->setColor($data['color'] ?? 'blue')
             ->setFullDay($fullDay)
             ->setStartAt($startAt)
             ->setEndAt($endAt)
+            ->setToken($data['token'])
             ->addUser($user);
     }
 }
