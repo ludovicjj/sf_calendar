@@ -1,9 +1,12 @@
 import React from 'react';
+import {useToasts} from "../ToastContext";
 
 export default function ({ currentDate, setCurrentDate, setIsModalOpen }) {
     const goToToday = () => {
         setCurrentDate(new Date());
     };
+
+    const { pushToast } = useToasts();
 
     const goToPreviousMonth = () => {
         setCurrentDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1));
@@ -12,6 +15,13 @@ export default function ({ currentDate, setCurrentDate, setIsModalOpen }) {
     const goToNextMonth = () => {
         setCurrentDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1));
     };
+
+    const addToast = () => {
+        pushToast({
+            title: "Bravo",
+            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit odio vitae nibh euismod, vel eleifend nisi dictum."
+        })
+    }
 
     return (
         <div className="flex justify-between my-4">
@@ -54,7 +64,7 @@ export default function ({ currentDate, setCurrentDate, setIsModalOpen }) {
             </div>
 
             {/* Bouton Ajouter un événement */}
-            <div>
+            <div className="flex items-center gap-1">
                 <button
                     type="button"
                     className="border border-grey-900 p-2 rounded-lg transition-colors duration-200 ease-in-out hover:bg-gray-200 focus:outline-none"
@@ -63,6 +73,12 @@ export default function ({ currentDate, setCurrentDate, setIsModalOpen }) {
                     <svg viewBox="0 0 24 24" className="w-6 h-6">
                         <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v14m-7-7h14"/>
                     </svg>
+                </button>
+                <button
+                    type="button"
+                    className="border border-grey-900 p-2 rounded-lg transition-colors duration-200 ease-in-out hover:bg-gray-200 focus:outline-none"
+                    onClick={addToast}>
+                    Toast
                 </button>
             </div>
         </div>

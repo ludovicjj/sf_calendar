@@ -6,3 +6,12 @@ body.modal-open {
     max-height: 100vh;
     overflow: hidden;
 }
+
+.toast-container {
+    position: fixed;
+    z-index: 3;
+    top: 5px;
+    right: 50%;
+    transform: translateX(50%);
+    width: 400px;
+}

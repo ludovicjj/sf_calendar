@@ -6,6 +6,7 @@ import {getDayId, getDaysBetween} from "../../utils/dateUtils";
 import {parseEvent} from "../../utils/eventUtils";
 import PropTypes from "prop-types";
 import CalendarModal from "./CalendarModal";
+import {ToastContextProvider} from "../ToastContext";
 
 export default function CalendarApp ({ initialEvents }) {
     // State current Date
@@ -87,22 +88,24 @@ export default function CalendarApp ({ initialEvents }) {
     return (
         <div className="p-8">
             <Header title="Calendrier" />
-            <CalendarNav
-                currentDate={currentDate}
-                setCurrentDate={setCurrentDate}
-                setIsModalOpen={setIsModalOpen}
-            />
-            <CalendarGrid
-                currentDate={currentDate}
-                eventsMap={eventsMap}
-                openModal={openModal}
-            />
-            <CalendarModal
-                isOpen={isModalOpen}
-                closeModal={closeModal}
-                selectedEvent={selectedEvent}
-                addEvent={addEvent}
-            />
+            <ToastContextProvider>
+                <CalendarNav
+                    currentDate={currentDate}
+                    setCurrentDate={setCurrentDate}
+                    setIsModalOpen={setIsModalOpen}
+                />
+                <CalendarGrid
+                    currentDate={currentDate}
+                    eventsMap={eventsMap}
+                    openModal={openModal}
+                />
+                <CalendarModal
+                    isOpen={isModalOpen}
+                    closeModal={closeModal}
+                    selectedEvent={selectedEvent}
+                    addEvent={addEvent}
+                />
+            </ToastContextProvider>
         </div>
     );
 }
