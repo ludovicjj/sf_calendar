@@ -9,7 +9,7 @@ body.modal-open {
 
 .toast-container {
     position: fixed;
-    z-index: 3;
+    z-index: 51;
     top: 5px;
     right: 50%;
     transform: translateX(50%);

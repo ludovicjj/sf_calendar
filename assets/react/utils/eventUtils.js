@@ -21,21 +21,6 @@ export function parseEvent(initialEvents) {
             end: new Date(event.end),
         };
     })
-
-    // return  initialEvents.map(event => {
-    //     try {
-    //         return {
-    //             ...event,
-    //             start: new Date(event.start),
-    //             end: new Date(event.end),
-    //             // start: parseDateWithoutTimezone(event.start),
-    //             // end: parseDateWithoutTimezone(event.end),
-    //         };
-    //     } catch (error) {
-    //         console.error('Error parsing event dates:', error);
-    //         return null;
-    //     }
-    // }).filter(event => event !== null);
 }
 
 /**
@@ -46,12 +31,22 @@ export function parseEvent(initialEvents) {
 export function isFullDay(start, end) {
     const startDate = parseStringToDate(start);
     const endDate = parseStringToDate(end);
-    console.log('start : ', start)
-    console.log('end : ', end)
-    console.log('Start date string : ', startDate.toDateString())
-    console.log('End date string : ', endDate.toDateString())
 
     return startDate.toDateString() !== endDate.toDateString();
+}
+
+/**
+ * Défini si un événement est sur plusieurs jours
+ * @param {string} start
+ * @param {string} end
+ */
+export function isStartBeforeEnd(start, end) {
+    if (!start || !end) return true;
+
+    const startDate = parseStringToDate(start);
+    const endDate = parseStringToDate(end);
+
+    return startDate < endDate;
 }
 
 /**

@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-const ANIMATION_DURATION = 300; // en ms
 
 export function Toast({ title, content, type = "info", onClose, startExitAnimation}) {
     const [isExiting, setIsExiting] = useState(false);
@@ -13,7 +12,6 @@ export function Toast({ title, content, type = "info", onClose, startExitAnimati
                 return "bg-red-100 border-red-500 text-red-700";
             case "warning":
                 return "bg-yellow-100 border-yellow-500 text-yellow-700";
-            case "info":
             default:
                 return "bg-blue-100 border-blue-500 text-blue-700";
         }
@@ -22,10 +20,8 @@ export function Toast({ title, content, type = "info", onClose, startExitAnimati
     const handleClose = () => {
         setIsExiting(true);
         setTimeout(() => {
-            if (onClose) {
-                onClose();
-            }
-        }, ANIMATION_DURATION);
+            onClose();
+        }, 300);
     };
 
     useEffect(() => {

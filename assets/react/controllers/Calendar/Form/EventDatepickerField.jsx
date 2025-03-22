@@ -1,9 +1,21 @@
 import React, {useEffect, useRef} from "react";
 import AirDatepicker from "air-datepicker";
-import {localeFr} from "../../utils/localUtils";
-import {formatDateToInputDateString, formatInputDateStringToDate} from "../../utils/dateUtils";
+import {localeFr} from "../../../utils/localUtils";
+import {formatDateToInputDateString, formatInputDateStringToDate} from "../../../utils/dateUtils";
 
-export default function CalendarDatepicker(
+/**
+ * Composant pour la création d'un input
+ * @param {string} name - attr id et name de l'input
+ * @param {string} value - Valeur de l'input
+ * @param {string} label - Valeur du label
+ * @param {object} error - Error
+ * @param {Function} setFormData - Fonction appelée lors du changement
+ * @param {Function} setErrors - Fonction de mise à jour des erreurs
+ * @param {Function} onChange - Fonction appelée lors du changement du champ
+ * @param isDatepickerVisibleRef - Reference
+ * @param {Function} toggleDatepicker - Object contenant les erreurs du champ
+ */
+export default function EventDatepickerField(
     {
         name,
         value,
@@ -87,7 +99,7 @@ export default function CalendarDatepicker(
                 </button>
             </div>
             {error.isUpdated && !error.isValid && (
-                <p className="mt-1 text-red-500 text-sm">Date invalide</p>
+                <p className="mt-1 text-red-500 text-sm">{error.message}</p>
             )}
         </div>
     );

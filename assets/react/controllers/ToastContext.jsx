@@ -53,8 +53,6 @@ function Toasts () {
     // Map pour stocker les états d'animation de sortie
     const [exiting, setExiting] = useState({});
 
-    console.log(toasts, exiting)
-
     // Récupère la même ref partagée via le contexte
     const {pushToastRef} = useContext(ToastContext)
 

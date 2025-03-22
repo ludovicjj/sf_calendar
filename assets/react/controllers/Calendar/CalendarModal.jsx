@@ -5,11 +5,9 @@ import '../../../styles/air-datepicker.css'
 import CalendarForm from "./CalendarForm";
 
 export default function CalendarModal ({ isOpen, closeModal, selectedEvent, addEvent }) {
-    // State
+    // Ref
     const startDatepickerVisibleRef = useRef(false);
     const endDatepickerVisibleRef = useRef(false);
-
-    // Ref
     const modalRef = useRef(null);
     const modalWrapperRef = useRef(null);
 
@@ -105,17 +103,3 @@ export default function CalendarModal ({ isOpen, closeModal, selectedEvent, addE
         document.body
     );
 }
-
-// CalendarModal.propTypes = {
-//     isOpen: PropTypes.bool.isRequired,
-//     closeModal: PropTypes.func.isRequired,
-//     selectedEvent: PropTypes.shape({
-//         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-//         title: PropTypes.string.isRequired,
-//         description: PropTypes.string,
-//         start: PropTypes.instanceOf(Date).isRequired,
-//         end: PropTypes.instanceOf(Date),
-//         fullDay: PropTypes.bool,
-//         color: PropTypes.string,
-//     }),
-// };

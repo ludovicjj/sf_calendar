@@ -75,15 +75,15 @@ export default function CalendarApp ({ initialEvents }) {
     };
 
     // Fonction pour ouvrir la modale
-    const openModal = useCallback((event = null) => {
-        setSelectedEvent(event);
-        setIsModalOpen(true);
-    }, [])
+    const openModal = (event = null) => {
+        setSelectedEvent(event)
+        setIsModalOpen(true)
+    }
 
-    const closeModal = useCallback(() => {
+    const closeModal = () => {
         setSelectedEvent(null)
-        setIsModalOpen(false);
-    }, [])
+        setIsModalOpen(false)
+    }
 
     return (
         <div className="p-8">
