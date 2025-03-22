@@ -15,17 +15,27 @@ import {parseStringToDate} from "./dateUtils";
  */
 export function parseEvent(initialEvents) {
     return  initialEvents.map(event => {
-        try {
-            return {
-                ...event,
-                start: parseDateWithoutTimezone(event.start),
-                end: parseDateWithoutTimezone(event.end),
-            };
-        } catch (error) {
-            console.error('Error parsing event dates:', error);
-            return null;
-        }
-    }).filter(event => event !== null);
+        return {
+            ...event,
+            start: new Date(event.start),
+            end: new Date(event.end),
+        };
+    })
+
+    // return  initialEvents.map(event => {
+    //     try {
+    //         return {
+    //             ...event,
+    //             start: new Date(event.start),
+    //             end: new Date(event.end),
+    //             // start: parseDateWithoutTimezone(event.start),
+    //             // end: parseDateWithoutTimezone(event.end),
+    //         };
+    //     } catch (error) {
+    //         console.error('Error parsing event dates:', error);
+    //         return null;
+    //     }
+    // }).filter(event => event !== null);
 }
 
 /**
