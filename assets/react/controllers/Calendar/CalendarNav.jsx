@@ -18,8 +18,10 @@ export default function ({ currentDate, setCurrentDate, setIsModalOpen }) {
 
     const addToast = () => {
         pushToast({
-            title: "Bravo",
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit odio vitae nibh euismod, vel eleifend nisi dictum."
+            title: "Succès",
+            content: "Opération réussie !",
+            type: "success",
+            duration: 5000
         })
     }
 
