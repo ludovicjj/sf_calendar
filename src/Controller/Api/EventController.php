@@ -46,7 +46,7 @@ class EventController extends AbstractController
     /**
      * @throws ValidationException
      */
-    #[Route('/api/event/{token:event}', name: 'api_event_update',methods: ['POST'])]
+    #[Route('/api/event/{token:event}', name: 'api_event_update', methods: ['POST'])]
     public function update(
         EventFactory $eventFactory,
         EntityManagerInterface $entityManager,
@@ -62,5 +62,14 @@ class EventController extends AbstractController
             'message' => 'success',
             'event' => $event
         ], Response::HTTP_OK, [], ['groups' => ['event:read']]);
+    }
+
+    #[Route('/api/event/{token:event}', name: 'api_event_delete', methods: ['DELETE'])]
+    public function delete(Event $event, EntityManagerInterface $entityManager): Response
+    {
+        $entityManager->remove($event);
+        $entityManager->flush();
+
+        return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 }

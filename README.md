@@ -5,6 +5,8 @@
 - symfony : ```7.2.*```
 - Doctrine: ```^3```
 - postgres : ```16-alpine```
+- React : ```18.0```
+- tailwindcss: ```^3.4.17```
 
 ## Utils
 

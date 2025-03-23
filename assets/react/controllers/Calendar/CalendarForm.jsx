@@ -13,7 +13,8 @@ import { v4 as uuidv4 } from 'uuid';
  *
  * @param {Function} handleCloseModal - Fonction de fermeture de la modale
  * @param {Object|null} selectedEvent - événement en cours de modification
- * @param {Function} addEvent - Fonction de fermeture de la modale
+ * @param {Function} pushEvent - Fonction de creation/modification d'un événement
+ * @param {Function} removeEvent - Fonction de suppression d'un événement
  * @param startDatepickerVisibleRef - Reference
  * @param endDatepickerVisibleRef - Reference
  * @return {JSX.Element}
@@ -22,7 +23,8 @@ export default function CalendarForm (
     {
         handleCloseModal,
         selectedEvent,
-        addEvent,
+        pushEvent,
+        removeEvent,
         startDatepickerVisibleRef,
         endDatepickerVisibleRef
     }
@@ -129,11 +131,37 @@ export default function CalendarForm (
 
                 if (selectedEvent) {
                     addToast("Succès", "L'événement a été modifié avec succès.");
-                    addEvent(event, selectedEvent);
+                    pushEvent(event, selectedEvent);
                 } else {
                     addToast("Succès", "L'événement a été créé avec succès.");
-                    addEvent(event);
+                    pushEvent(event);
                 }
+            }
+        } catch (error) {
+            console.error('Erreur lors de la création de l\'événement :', error);
+        }
+    }
+
+    const handleDelete = async () => {
+        if (!selectedEvent) {
+            addToast("Erreur", "Une erreur est survenu.", 'error');
+            return;
+        }
+
+        try {
+            const url = `/api/event/${selectedEvent.token}`
+
+            const response = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.ok) {
+                handleCloseModal()
+                removeEvent(selectedEvent)
+                addToast("Succès", "L'événement a été supprimé avec succès.");
             }
         } catch (error) {
             console.error('Erreur lors de la création de l\'événement :', error);
@@ -201,12 +229,22 @@ export default function CalendarForm (
                 onChange={handleChange}
             />
 
-            <button type="submit"
+            <div className="flex justify-between">
+                <button type="submit"
+                        className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
+                        formNoValidate
+                >
+                    Enregistrer
+                </button>
+
+                {selectedEvent && (<button
+                    type="button"
+                    onClick={handleDelete}
                     className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
-                    formNoValidate
-            >
-                Enregistrer
-            </button>
+                >
+                    Supprimer
+                </button>)}
+            </div>
         </form>
     )
 }

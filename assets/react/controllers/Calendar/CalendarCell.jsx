@@ -112,6 +112,7 @@ export default function CalendarCell ({ currentDate, dayOfWeek, eventsMap, posit
                                 }}
                                 key={index}
                                 className={eventClasses.join(' ')}
+                                onClick={() => openModal(event)}
                             >
                                 {event.title}
                             </div>
