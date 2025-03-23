@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-6 text-center">Connexion</h2>
+
+            {% if error %}
+                {{ component('Alert', {
+                    message:  error.messageKey|trans(error.messageData, 'security'),
+                    color: 'bg-red-400',
+                    icon: 'warning'
+                }) }}
+            {% endif %}
+
+            <form action="{{ path('app_login') }}" method="post">
+                <div class="mb-4">
+                    <label
+                            for="email"
+                            class="block mb-2 text-sm font-bold text-gray-800 dark:text-white"
+                    >
+                        Identifiant
+                    </label>
+                    <input
+                            type="text"
+                            id="email"
+                            name="email"
+                            value="{{ last_username }}"
+                            autocomplete="current-email"
+                            required
+                            class="block w-full p-2.5 bg-gray-50 rounded-lg
+                            border border-gray-300 text-gray-800 text-sm
+                            focus:outline-none focus:ring-blue-500 focus:border-blue-500
+                            dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
+                            dark:focus:border-blue-500 dark:bg-gray-700"
+                            placeholder="Entrez votre email"
+                    >
+                </div>
+                <div class="mb-6">
+                    <label
+                            for="password"
+                            class="block mb-2 text-sm font-bold text-gray-800 dark:text-white"
+                    >
+                        Mot de passe
+                    </label>
+                    <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            autocomplete="current-password"
+                            class="block w-full p-2.5 bg-gray-50 rounded-lg
+                            border border-gray-300 text-gray-800 text-sm
+                            focus:outline-none focus:ring-blue-500 focus:border-blue-500
+                            dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
+                            dark:focus:border-blue-500 dark:bg-gray-700"
+                            placeholder="Entrez votre mot de passe"
+                    >
+                </div>
+
+                <div class="mb-6">
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="_remember_me" class="sr-only peer">
+                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-500 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-500 dark:peer-checked:bg-blue-500"></div>
+                        <span class="ms-3 text-sm font-medium text-gray-800 dark:text-gray-300">Se souvenir de moi</span>
+                    </label>
+                </div>
+
+                {# If you want to control the URL the user is redirected to on success
+                <input type="hidden" name="_target_path" value="/account"> #}
+                <input type="hidden" name="csrf_token" data-controller="csrf-protection" value="{{ csrf_token('login') }}">
+
+                <button
+                        type="submit"
+                        class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+                >
+                    Se connecter
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

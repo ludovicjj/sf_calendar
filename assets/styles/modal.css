@@ -1,0 +1,36 @@
+.modal {
+    opacity: 0;
+    pointer-events: none;
+}
+.modal.open {
+    animation: fadeIn .3s both;
+    pointer-events: auto;
+}
+.modal.close {
+    animation: fadeOut .3s both;
+}
+
+.modal-wrapper {
+    animation: slideFromTop .3s both;
+}
+
+.modal.close .modal-wrapper {
+    animation: slideToTop .3s both;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+@keyframes slideFromTop {
+    from { transform: translateY(-50px); }
+    to { transform: translateY(0px); }
+}
+@keyframes slideToTop {
+    from { transform: translateY(0px); }
+    to { transform: translateY(-50px); }
+}

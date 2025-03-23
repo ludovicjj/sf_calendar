@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body.modal-open {
+    max-height: 100vh;
+    overflow: hidden;
+}
+
+.toast-container {
+    position: fixed;
+    z-index: 51;
+    top: 5px;
+    right: 50%;
+    transform: translateX(50%);
+    width: 400px;
+}

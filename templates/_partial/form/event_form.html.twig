@@ -1,0 +1,59 @@
+{{ form_start(form, {'attr': {
+    'autocomplete': 'off',
+    'data-action': "submit->event#onCreate",
+    'data-event-target': 'form',
+    'data-modal-target': 'form',
+}}) }}
+    {{ form_row(form.name) }}
+
+    {{ form_row(form.startAt, {'attr': {
+        'maxlength': '16',
+        'placeholder': 'dd-mm-aaaa hh:mm',
+        'data-datepicker-target': 'start',
+        'data-action': 'input->datepicker#validateDateInput'
+    }}) }}
+
+    {{ form_row(form.endAt, {'attr': {
+        'maxlength': '16',
+        'placeholder': 'dd-mm-aaaa hh:mm',
+        'data-datepicker-target': 'end',
+        'data-action': 'input->datepicker#validateDateInput'
+    }}) }}
+
+    <div class="mb-4">
+        <span class="text-sm font-medium text-gray-700">
+            Couleur de l'événement
+            <span class="text-gray-400">(facultatif)</span>
+        </span>
+        <div class="flex gap-4 color-items mt-1">
+            {% for choice in form.type %}
+                <label class="flex items-center color-item">
+                    {{ form_widget(choice, { 'attr': {
+                        'class': 'p-2 rounded-full hidden',
+                        'data-action': 'change->event#enableColor'
+                    } }) }}
+                    <span class="block w-[25px] h-[25px] rounded-full border-2 border-gray-400 cursor-pointer color"
+                          style="background-color: {{ choice.vars.label }};"
+                    ></span>
+                </label>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-4">
+        {{ form_label(form.description, 'Commentaire <span class="text-gray-400">(facultatif)</span>') }}
+        {{ form_widget(form.description, {'attr': {'class': 'h-32'}}) }}
+    </div>
+
+    <div class="hidden">
+        {{ form_row(form.fullDay, {'attr': {'data-datepicker-target': 'checkbox'}}) }}
+    </div>
+
+    <button type="submit"
+            class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
+            formnovalidate
+            data-datepicker-target="submit"
+    >
+        Enregistrer
+    </button>
+{{ form_end(form) }}
