@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import '../../../styles/air-datepicker.css'
 import CalendarForm from "./CalendarForm";
 
-export default function CalendarModal ({ isOpen, closeModal, selectedEvent, addEvent }) {
+export default function CalendarModal ({ isOpen, closeModal, selectedEvent, pushEvent, removeEvent }) {
     // Ref
     const startDatepickerVisibleRef = useRef(false);
     const endDatepickerVisibleRef = useRef(false);
@@ -92,7 +92,8 @@ export default function CalendarModal ({ isOpen, closeModal, selectedEvent, addE
                     <CalendarForm
                         handleCloseModal={handleCloseModal}
                         selectedEvent={selectedEvent}
-                        addEvent={addEvent}
+                        pushEvent={pushEvent}
+                        removeEvent={removeEvent}
                         startDatepickerVisibleRef={startDatepickerVisibleRef}
                         endDatepickerVisibleRef={endDatepickerVisibleRef}
                     />
