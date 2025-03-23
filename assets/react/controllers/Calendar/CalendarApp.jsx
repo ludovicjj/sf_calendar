@@ -58,6 +58,39 @@ export default function CalendarApp ({ initialEvents }) {
         });
     };
 
+    const pushEvent = (newEvent, oldEvent = null) => {
+        setEventsMap(prevMap => {
+            const newMap = new Map(prevMap);
+
+            // Remove oldEvent
+            if (oldEvent) {
+                const oldDays = getDaysBetween(oldEvent.start, oldEvent.end);
+                for (const day of oldDays) {
+                    const key = getDayId(day);
+                    if (newMap.has(key)) {
+                        // remove old event from Map
+                        newMap.set(key, newMap.get(key).filter(e => e.token !== oldEvent.token));
+                        if (newMap.get(key).length === 0) {
+                            newMap.delete(key);
+                        }
+                    }
+                }
+            }
+
+            // Add new Event
+            const days = getDaysBetween(newEvent.start, newEvent.end);
+            for (const day of days) {
+                const key = getDayId(day);
+                if (!newMap.has(key)) {
+                    newMap.set(key, []);
+                }
+                newMap.get(key).push(newEvent);
+            }
+
+            return newMap
+        })
+    }
+
     // Fonction pour supprimer un événement
     const removeEvent = (eventId) => {
         setEventsMap(prevMap => {
@@ -103,7 +136,7 @@ export default function CalendarApp ({ initialEvents }) {
                     isOpen={isModalOpen}
                     closeModal={closeModal}
                     selectedEvent={selectedEvent}
-                    addEvent={addEvent}
+                    addEvent={pushEvent}
                 />
             </ToastContextProvider>
         </div>

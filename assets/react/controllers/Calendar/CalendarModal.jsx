@@ -1,6 +1,5 @@
 import React, {useEffect, useRef} from 'react';
 import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
 import '../../../styles/air-datepicker.css'
 import CalendarForm from "./CalendarForm";
 

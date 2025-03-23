@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useMemo} from "react";
 import {formatDateToInputDateString, formatInputDateStringToDate} from "../../utils/dateUtils";
 import {isFullDay} from "../../utils/eventUtils";
 import {useToasts} from "../ToastContext";
@@ -17,7 +17,6 @@ import { v4 as uuidv4 } from 'uuid';
  * @param startDatepickerVisibleRef - Reference
  * @param endDatepickerVisibleRef - Reference
  * @return {JSX.Element}
- * @constructor
  */
 export default function CalendarForm (
     {
@@ -49,23 +48,33 @@ export default function CalendarForm (
         end: formatDateToInputDateString(selectedEvent?.end) || "",
     }
 
-    const initialErrors =  {
-        title: {
-            isValid: false,
-            isUpdated: false,
-            message: "Cette valeur ne peux pas être vide."
-        },
-        start: {
-            isValid: false,
-            isUpdated: false,
-            message: "Date invalide"
-        },
-        end: {
-            isValid: false,
-            isUpdated: false,
-            message: "Date invalide"
-        },
-    }
+    const getInitialErrors = (data) => {
+        const errors = {
+            title: {
+                isValid: false,
+                isUpdated: false,
+                message: "Cette valeur ne peut pas être vide."
+            },
+            start: {
+                isValid: false,
+                isUpdated: false,
+                message: "Date invalide"
+            },
+            end: {
+                isValid: false,
+                isUpdated: false,
+                message: "Date invalide"
+            }
+        };
+
+        if (data.title) errors.title.isValid = true;
+        if (data.start) errors.start.isValid = true;
+        if (data.end) errors.end.isValid = true;
+
+        return errors;
+    };
+
+    const initialErrors = getInitialErrors(initialData);
 
     const {
         formData,
@@ -105,7 +114,9 @@ export default function CalendarForm (
         };
 
         try {
-            const response = await fetch('/api/event', {
+            const url = selectedEvent ? `/api/event/${selectedEvent.token}` : '/api/event';
+
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -115,8 +126,14 @@ export default function CalendarForm (
 
             if (response.ok) {
                 handleCloseModal()
-                addToast("Succès", "L'événement a été créé avec success.")
-                addEvent(event)
+
+                if (selectedEvent) {
+                    addToast("Succès", "L'événement a été modifié avec succès.");
+                    addEvent(event, selectedEvent);
+                } else {
+                    addToast("Succès", "L'événement a été créé avec succès.");
+                    addEvent(event);
+                }
             }
         } catch (error) {
             console.error('Erreur lors de la création de l\'événement :', error);
@@ -193,102 +210,3 @@ export default function CalendarForm (
         </form>
     )
 }
-
-// // State
-// const [errors, setErrors] = useState({
-//     title: { isValid: false, isUpdated: false, message: "Cette valeur ne peux pas être vide." },
-//     start: { isValid: false, isUpdated: false, message: "Date invalide" },
-//     end: { isValid: false, isUpdated: false, message: "Date invalide" },
-//     dateRange: { isValid: true, isUpdated: false, message: "La date de début doit être antérieure à la date de fin" }
-// });
-//
-// const [formData, setFormData] = useState({
-//     title: selectedEvent?.title || "",
-//     description: selectedEvent?.description || "",
-//     color: selectedEvent?.color || "blue",
-//     start: formatDateToInputDateString(selectedEvent?.start) || "",
-//     end: formatDateToInputDateString(selectedEvent?.end) || "",
-// })
-
-// const validateAndFormatDate = (inputValue) => {
-//     // Seuls les chiffres sont autorisés
-//     let value = inputValue.replace(/[^0-9]/g, "");
-//
-//     let day = value.slice(0, 2);
-//     let month = value.slice(2, 4);
-//     let year = value.slice(4, 8);
-//     let hours = value.slice(8, 10);
-//     let minutes = value.slice(10, 12);
-//
-//     if (day > 31) day = "31";
-//     if (month > 12) month = "12";
-//     if (hours > 23) hours = "23";
-//     if (minutes > 59) minutes = "59";
-//
-//     // Build formatted value
-//     let formattedValue = "";
-//     if (day) formattedValue += day;
-//     if (month) formattedValue += `-${month}`;
-//     if (year) formattedValue += `-${year}`;
-//     if (hours) formattedValue += ` ${hours}`;
-//     if (minutes) formattedValue += `:${minutes}`;
-//
-//     // Vérifier si la date est valide
-//     const date = new Date(`${year}-${month}-${day}T${hours}:${minutes}:00`);
-//     const isValid =
-//         date?.getDate() === parseInt(day, 10) &&
-//         date?.getMonth() + 1 === parseInt(month, 10) &&
-//         date?.getFullYear() === parseInt(year, 10);
-//
-//     return {formattedValue, isValid};
-// };
-
-// const validateForm = () => {
-//     const isDateRangeValid = isStartBeforeEnd(formData.start, formData.end);
-//     const hasErrors = Object.entries(errors)
-//         .some(([_, value]) => !value.isValid);
-//
-//     if (hasErrors) {
-//         // update state
-//         setErrors((prevErrors) => {
-//             const updatedErrors = { ...prevErrors }
-//
-//             for (const key in updatedErrors) {
-//                 if (!updatedErrors[key].isValid) {
-//                     updatedErrors[key].isUpdated = true;
-//                 }
-//             }
-//             return updatedErrors;
-//         });
-//
-//         return false;
-//     }
-//
-//     return true
-// }
-
-// const handleChange = (e) => {
-//     const { name, value } = e.target
-//     let updatedValue = value
-//     let isValid = value.trim() !== ""
-//
-//     if (['start', 'end'].includes(name)) {
-//         const result = validateAndFormatDate(value)
-//         updatedValue = result.formattedValue
-//         isValid = result.isValid
-//     }
-//
-//     // Mise à jour du formData avec la nouvelle valeur
-//     const updatedFormData = {
-//         ...formData,
-//         [name]: updatedValue,
-//     };
-//     setFormData(updatedFormData);
-//
-//     if (name in errors) {
-//         setErrors((prevErrors) => ({
-//             ...prevErrors,
-//             [name]: {isValid, isUpdated: true}
-//         }));
-//     }
-// };

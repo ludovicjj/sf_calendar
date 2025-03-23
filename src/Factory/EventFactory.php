@@ -25,9 +25,41 @@ readonly class EventFactory
         /** @var User $user */
         $user = $this->security->getUser();
 
+        $event = $this->hydrateEvent(new Event(), $data);
+        $event
+            ->setToken($data['token'])
+            ->addUser($user);
+
+        return $event;
+    }
+
+    public function update(Event $event): Event
+    {
+        $request = $this->requestStack->getMainRequest();
+        $data = $request->toArray();
+
+        return $this->hydrateEvent($event, $data);
+    }
+
+    private function hydrateEvent(Event $event, array $data): Event
+    {
+        [$startAt, $endAt, $fullDay] = $this->processEventDates($data);
+
+        return $event
+            ->setTitle($data['title'] ?? null)
+            ->setDescription($data['description'] ?? null)
+            ->setColor($data['color'] ?? 'blue')
+            ->setFullDay($fullDay)
+            ->setStartAt($startAt)
+            ->setEndAt($endAt);
+    }
+
+    private function processEventDates(array $data): array
+    {
         $startAt = null;
         $endAt = null;
         $fullDay = null;
+
         try {
             $start = $data['start'] ?? null;
             $end = $data['end'] ?? null;
@@ -44,16 +76,9 @@ readonly class EventFactory
                 $fullDay = $startAt->format('Y-m-d') !== $endAt->format('Y-m-d');
             }
         } catch (Exception) {
+            // Silence les erreurs de parsing de date
         }
 
-        return (new Event())
-            ->setTitle($data['title'] ?? null)
-            ->setDescription($data['description'] ?? null)
-            ->setColor($data['color'] ?? 'blue')
-            ->setFullDay($fullDay)
-            ->setStartAt($startAt)
-            ->setEndAt($endAt)
-            ->setToken($data['token'])
-            ->addUser($user);
+        return [$startAt, $endAt, $fullDay];
     }
 }
