@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import Header from '../Header';
 import CalendarNav from "./CalendarNav";
 import CalendarGrid from "./CalendarGrid";
@@ -40,24 +40,6 @@ export default function CalendarApp ({ initialEvents }) {
         return map;
     });
 
-    // Fonction pour ajouter un événement
-    const addEvent = (event) => {
-        setEventsMap(prevMap => {
-            const newMap = new Map(prevMap);
-
-            const days = getDaysBetween(event.start, event.end);
-            for (const day of days) {
-                const key = getDayId(day)
-                if (!newMap.has(key)) {
-                    newMap.set(key, []);
-                }
-                newMap.get(key).push(event);
-            }
-
-            return newMap;
-        });
-    };
-
     const pushEvent = (newEvent, oldEvent = null) => {
         setEventsMap(prevMap => {
             const newMap = new Map(prevMap);
@@ -92,15 +74,19 @@ export default function CalendarApp ({ initialEvents }) {
     }
 
     // Fonction pour supprimer un événement
-    const removeEvent = (eventId) => {
+    const removeEvent = (event) => {
         setEventsMap(prevMap => {
             const newMap = new Map(prevMap);
-            for (const [dayId, events] of newMap.entries()) {
-                const filteredEvents = events.filter(event => event.id !== eventId);
-                if (filteredEvents.length > 0) {
-                    newMap.set(dayId, filteredEvents);
-                } else {
-                    newMap.delete(dayId);
+
+            const days = getDaysBetween(event.start, event.end);
+            for (const day of days) {
+                const key = getDayId(day);
+                if (newMap.has(key)) {
+                    // remove old event from Map
+                    newMap.set(key, newMap.get(key).filter(e => e.token !== event.token));
+                    if (newMap.get(key).length === 0) {
+                        newMap.delete(key);
+                    }
                 }
             }
             return newMap;
@@ -136,7 +122,8 @@ export default function CalendarApp ({ initialEvents }) {
                     isOpen={isModalOpen}
                     closeModal={closeModal}
                     selectedEvent={selectedEvent}
-                    addEvent={pushEvent}
+                    pushEvent={pushEvent}
+                    removeEvent={removeEvent}
                 />
             </ToastContextProvider>
         </div>
