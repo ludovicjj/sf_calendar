@@ -18,6 +18,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
 {
     // Just before the firewall's Symfony\Component\Security\Http\Firewall\ExceptionListener
     private const LISTENER_PRIORITY = 2;
+
     use TargetPathTrait;
 
     public function __construct(
@@ -29,7 +30,6 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
-        // return the subscribed events, their methods and priorities
         return [
             KernelEvents::EXCEPTION => [
                 ['processException', 10],
@@ -77,12 +77,8 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
         $request = $exceptionEvent->getRequest();
 
-        // event
-        //$event = new TwoFactorAuthenticationEvent($request, $token);
-        //$this->eventDispatcher->dispatch($event, TwoFactorAuthenticationEvents::REQUIRE);
-
         if (
-            $this->httpUtils->checkRequestPath($request, "app_2fa_authenticate") &&
+            !$this->httpUtils->checkRequestPath($request, "app_2fa_authenticate_check") &&
             $request->hasSession() &&
             $request->isMethodSafe() &&
             !$request->isXmlHttpRequest()

@@ -17,4 +17,6 @@ class TwoFactorEvent extends Event
     }
 
     public const EMAIL = 'two_factor.authentication.email';
+    public const SMS = 'two_factor.authentication.sms';
+    public const TOTP = 'two_factor.authentication.totp';
 }

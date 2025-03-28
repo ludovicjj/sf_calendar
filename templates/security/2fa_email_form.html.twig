@@ -1,13 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Saisie de données{% endblock %}
+{% block title %}Authentification à deux facteurs{% endblock %}
 
 {% block body %}
     <div class="min-h-screen flex items-center justify-center">
         <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
 
-            <h2 class="text-2xl font-bold mb-6 text-center">Formulaire de saisie</h2>
-            <p class="text-gray-600 mb-6 text-center">Veuillez saisir les informations demandées</p>
+            <h2 class="text-2xl font-bold mb-6 text-center">Code d'authentification</h2>
+            <p class="text-gray-600 mb-6 text-center">
+                Veuillez saisir votre code en fonction de la méthode d'authentification sélectionnée précédemment.
+            </p>
+
+            {% if error %}
+                {{ component('Alert', {
+                    message:  error.messageKey|trans(error.messageData, 'security'),
+                    color: 'bg-red-400',
+                    icon: 'warning'
+                }) }}
+            {% endif %}
 
             <form method="post">
                 <div class="mb-6">
@@ -23,6 +33,8 @@
                             placeholder="Entrez votre code"
                     >
                 </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('two_factor') }}">
 
                 <div class="flex gap-4 justify-between mt-8">
                     <a href="#"

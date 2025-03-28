@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 class TwoFactorController extends AbstractController
 {
@@ -48,8 +50,12 @@ class TwoFactorController extends AbstractController
     }
 
     #[Route('/2fa/authentication/check', name: 'app_2fa_authenticate_check')]
-    public function authenticateMail(Request $request): Response
+    public function authenticateMail(AuthenticationUtils $authenticationUtils): Response
     {
-        return $this->render('security/2fa_email_form.html.twig');
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        return $this->render('security/2fa_email_form.html.twig', [
+            'error' => $error,
+        ]);
     }
 }

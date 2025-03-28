@@ -7,4 +7,3 @@ scheb_two_factor:
         enabled: false
         sender_email: no-reply@example.com
         digits: 6
-        template: security/2fa_form.html.twig

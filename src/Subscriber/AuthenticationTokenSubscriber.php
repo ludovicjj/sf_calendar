@@ -3,11 +3,13 @@
 namespace App\Subscriber;
 
 use App\Entity\User;
+use App\Security\Authenticator\TwoFactorAuthenticator;
 use App\Security\Context\AuthenticationContextFactoryInterface;
 use App\Security\Token\TwoFactorProviderInitiator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
 use RuntimeException;
 
@@ -23,6 +25,18 @@ readonly class AuthenticationTokenSubscriber implements EventSubscriberInterface
     public function onAuthenticationTokenCreated(AuthenticationTokenCreatedEvent $event): void
     {
         $token = $event->getAuthenticatedToken();
+
+        if ($token instanceof TwoFactorAuthenticator) {
+            return;
+        }
+
+        if ($token instanceof RememberMeToken) {
+            return;
+        }
+
+        if ($token->hasAttribute(TwoFactorAuthenticator::FLAG_2FA_COMPLETE)) {
+            return;
+        }
 
         $request = $this->getRequest();
         $passport = $event->getPassport();

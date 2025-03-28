@@ -174,4 +174,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     {
         $this->authCode = $authCode;
     }
+
+    public function getSmsAuthCode(): string|null
+    {
+        return $this->authCode;
+    }
 }

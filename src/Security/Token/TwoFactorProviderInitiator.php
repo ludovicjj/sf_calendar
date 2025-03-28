@@ -12,8 +12,9 @@ readonly class TwoFactorProviderInitiator
     {
     }
 
-    public function beginTwoFactorAuthentication(AuthenticationContextInterface $authenticationContext): ?TwoFactorTokenInterface
-    {
+    public function beginTwoFactorAuthentication(
+        AuthenticationContextInterface $authenticationContext
+    ): ?TwoFactorTokenInterface {
         $activeProviders = $this->getActiveProviders($authenticationContext);
         $authenticatedToken = $authenticationContext->getToken();
 

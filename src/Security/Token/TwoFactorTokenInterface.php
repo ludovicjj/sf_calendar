@@ -7,6 +7,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 interface TwoFactorTokenInterface extends TokenInterface
 {
+    public const ATTRIBUTE_NAME_USE_REMEMBER_ME = 'use_remember_me';
+
     /**
      * Return the authenticated token.
      */
