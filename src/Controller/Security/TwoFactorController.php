@@ -35,18 +35,19 @@ class TwoFactorController extends AbstractController
         if ($request->isMethod('POST')) {
             $authMethod = $request->request->get('auth_method');
             $event = new TwoFactorEvent($token);
+            $token->setProviderPrepared($authMethod);
 
             if ($authMethod === 'email') {
                 $dispatcher->dispatch($event, TwoFactorEvent::EMAIL);
 
-                return $this->redirectToRoute('app_2fa_authenticate_email');
+                return $this->redirectToRoute('app_2fa_authenticate_check');
             }
         }
         
         return $this->render('security/2fa_authentication.html.twig');
     }
 
-    #[Route('/2fa/authentication/email', name: 'app_2fa_authenticate_email')]
+    #[Route('/2fa/authentication/check', name: 'app_2fa_authenticate_check')]
     public function authenticateMail(Request $request): Response
     {
         return $this->render('security/2fa_email_form.html.twig');

@@ -18,6 +18,7 @@ security:
                 lifetime: 604800 # 1 week in seconds
             custom_authenticator:
                 - App\Security\LoginFormAuthenticator
+                - App\Security\Authenticator\TwoFactorAuthenticator
             logout:
                 path: /logout
                 target: app_login
