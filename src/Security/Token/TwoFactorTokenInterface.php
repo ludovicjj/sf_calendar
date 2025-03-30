@@ -2,6 +2,8 @@
 
 namespace App\Security\Token;
 
+use App\Entity\User;
+use InvalidArgumentException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -39,32 +41,30 @@ interface TwoFactorTokenInterface extends TokenInterface
     public function getProviders(): array;
 
     /**
-     * Change the current two-factor provider. Provider alias is passed as an argument.
-     */
-    public function preferProvider(string $preferredProvider): void;
-
-    /**
      * Return the alias of the two-factor provider, which is currently active.
      */
     public function getCurrentProvider(): ?string;
 
     /**
-     * Flag a two-factor provider as complete. The provider's alias is passed as the argument.
-     */
-    public function setProviderComplete(string $providerName): void;
-
-    /**
-     * Check if all two-factor providers have been completed.
-     */
-    public function allProvidersAuthenticated(): bool;
-
-    /**
      * Check if a two-factor provider has completed preparation. The provider's alias is passed as the argument.
      */
-    public function isProviderPrepared(string $providerName): bool;
+    public function isProviderPrepared(): bool;
 
     /**
-     * Remember when a two-factor provider has completed preparation. The provider's alias is passed as the argument.
+     * Define the provider selected by the user for 2FA. The provider's alias is passed as the argument.
+     * Check if the selected provider is valid.
+     * Reset selected Provider each time the user change the selected provider
+     * @throws InvalidArgumentException
      */
     public function setProviderPrepared(string $providerName): void;
+
+    /**
+     * Remove all prepared providers
+     */
+    public function clearProviderPrepared(): void;
+
+    /**
+     * Valid prepared provider
+     */
+    public function isValidProviderPrepared(string $providerName): bool;
 }

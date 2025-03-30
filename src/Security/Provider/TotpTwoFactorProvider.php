@@ -3,10 +3,15 @@
 namespace App\Security\Provider;
 
 use App\Entity\User;
+use App\Security\Totp\TotpFactory;
 
-class EmailTwoFactorProvider implements TwoFactorProviderInterface
+class TotpTwoFactorProvider implements TwoFactorProviderInterface
 {
-    private const PROVIDER_NAME = 'email';
+    private const PROVIDER_NAME = 'totp';
+
+    public function __construct(private readonly TotpFactory $totpFactory)
+    {
+    }
 
     public function validateAuthenticationCode(object $user, string $authenticationCode): bool
     {
@@ -15,8 +20,12 @@ class EmailTwoFactorProvider implements TwoFactorProviderInterface
         }
 
         $authenticationCode = str_replace(' ', '', $authenticationCode);
+        if (0 === strlen($authenticationCode)) {
+            return false;
+        }
 
-        return $user->getEmailAuthCode() === $authenticationCode;
+        $totp = $this->totpFactory->createTotpFromUser($user);
+        return $totp->verify($authenticationCode, null, 1);
     }
 
     public function support(string $providerName): bool

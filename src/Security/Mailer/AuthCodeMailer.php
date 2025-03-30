@@ -5,6 +5,7 @@ namespace App\Security\Mailer;
 use App\Entity\User;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 readonly class AuthCodeMailer implements AuthCodeMailerInterface
 {
@@ -13,6 +14,9 @@ readonly class AuthCodeMailer implements AuthCodeMailerInterface
     ) {
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     public function sendAuthCode(User $user): void
     {
         $authCode = $user->getEmailAuthCode();
@@ -23,7 +27,7 @@ readonly class AuthCodeMailer implements AuthCodeMailerInterface
         $message = new Email();
         $message
             ->from('no-reply@sf-calendar.com')
-            ->to($user->getEmailAuthRecipient())
+            ->to($user->getEmail())
             ->subject('Authentication Code')
             ->text($authCode);
 

@@ -36,4 +36,9 @@ interface AuthenticationContextInterface
      * Return the firewall name.
      */
     public function getFirewallName(): string;
+
+    /**
+     * Return the active provider for double auth.
+     */
+    public function getActiveProviders(): array;
 }

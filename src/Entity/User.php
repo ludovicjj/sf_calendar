@@ -8,11 +8,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -34,6 +33,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\Column(type: 'string')]
     private string $password;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $phoneNumber = null;
+
     /**
      * @var Collection<int, Event>
      */
@@ -41,7 +43,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     private Collection $events;
 
     #[ORM\Column(type: 'string', nullable: true)]
-    private ?string $authCode;
+    private ?string $authCode = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $totpSecret = null;
 
     public function __construct()
     {
@@ -134,31 +139,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(string $password): static
     {
         $this->password = $password;
 
         return $this;
     }
 
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(?string $phoneNumber): static
+    {
+        $this->phoneNumber = $phoneNumber;
+
+        return $this;
+    }
+
     public function eraseCredentials(): void
     {
-        // TODO: Implement eraseCredentials() method.
     }
 
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
-    }
-
-    public function isEmailAuthEnabled(): bool
-    {
-        return true;
-    }
-
-    public function getEmailAuthRecipient(): string
-    {
-        return $this->email;
     }
 
     public function getEmailAuthCode(): string|null
@@ -170,13 +176,57 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         return $this->authCode;
     }
 
-    public function setEmailAuthCode(string $authCode): void
+    public function setEmailAuthCode(string $authCode): static
     {
         $this->authCode = $authCode;
+
+        return $this;
+    }
+
+    public function setSmsAuthCode(string $authCode): static
+    {
+        $this->authCode = $authCode;
+
+        return $this;
     }
 
     public function getSmsAuthCode(): string|null
     {
+        if (null === $this->authCode) {
+            throw new \LogicException('The sms authentication code was not set');
+        }
+
         return $this->authCode;
+    }
+
+    public function getTotpSecret(): ?string
+    {
+        if (null === $this->totpSecret) {
+            throw new \LogicException('The totp authentication code was not set');
+        }
+
+        return $this->totpSecret;
+    }
+
+    public function setTotpSecret(string $totpSecret): static
+    {
+        $this->totpSecret = $totpSecret;
+
+        return $this;
+    }
+
+    public function isTotpAuthenticationEnabled(): bool
+    {
+        return (bool)$this->totpSecret;
+    }
+
+    public function isEmailAuthenticationEnabled(): bool
+    {
+        return (bool)$this->email;
+    }
+
+    public function isSmsAuthenticationEnabled(): bool
+    {
+        return (bool)$this->phoneNumber;
     }
 }

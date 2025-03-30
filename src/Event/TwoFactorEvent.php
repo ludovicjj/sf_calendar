@@ -7,8 +7,10 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class TwoFactorEvent extends Event
 {
-    public function __construct(private readonly TwoFactorTokenInterface $token)
-    {
+    public function __construct(
+        private readonly TwoFactorTokenInterface $token,
+        private readonly ?string $data = null
+    ){
     }
 
     public function getToken(): TwoFactorTokenInterface
@@ -16,7 +18,10 @@ class TwoFactorEvent extends Event
         return $this->token;
     }
 
-    public const EMAIL = 'two_factor.authentication.email';
-    public const SMS = 'two_factor.authentication.sms';
-    public const TOTP = 'two_factor.authentication.totp';
+    public function getData(): ?string
+    {
+        return $this->data;
+    }
+
+    public const SEND = 'two_factor.authentication.send';
 }

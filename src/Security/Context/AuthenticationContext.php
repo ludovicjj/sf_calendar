@@ -14,7 +14,8 @@ readonly class AuthenticationContext implements AuthenticationContextInterface
         private Request        $request,
         private TokenInterface $token,
         private Passport       $passport,
-        private string         $firewallName
+        private string         $firewallName,
+        private array $activeProviders = [],
     ) {
     }
 
@@ -46,5 +47,10 @@ readonly class AuthenticationContext implements AuthenticationContextInterface
     public function getFirewallName(): string
     {
         return $this->firewallName;
+    }
+
+    public function getActiveProviders(): array
+    {
+        return $this->activeProviders;
     }
 }

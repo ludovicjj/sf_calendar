@@ -2,9 +2,8 @@
 
 namespace App\Security\Token;
 
-use Exception;
+use App\Entity\User;
 use InvalidArgumentException;
-use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -132,59 +131,53 @@ class TwoFactorToken implements TwoFactorTokenInterface
         return $this->providers;
     }
 
-    /**
-     * @throws Exception
-     */
-    public function preferProvider(string $preferredProvider): void
-    {
-        $this->removeProvider($preferredProvider);
-        array_unshift($this->providers, $preferredProvider);
-    }
 
     public function getCurrentProvider(): ?string
     {
-        $first = reset($this->providers);
+        return array_key_first($this->preparedProviders);
+    }
 
-        return false !== $first ? $first : null;
+    public function isProviderPrepared(): bool
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        return match($this->getCurrentProvider()) {
+            'email' => $user->isEmailAuthenticationEnabled(),
+            'sms'   => $user->isSmsAuthenticationEnabled(),
+            'totp'  => $user->isTotpAuthenticationEnabled(),
+            default => throw new InvalidArgumentException("La methode d'authentification est invalide.")
+        };
     }
 
     /**
-     * @throws Exception
+     * @throws InvalidArgumentException
      */
-    public function setProviderComplete(string $providerName): void
+    public function setProviderPrepared(?string $providerName): void
     {
-        if (!$this->isProviderPrepared($providerName)) {
-            throw new LogicException(sprintf('Two-factor provider "%s" cannot be completed because it was not prepared.', $providerName));
+        if (!$providerName) {
+            throw new InvalidArgumentException("Vous devez choisir une methode d'authentification.");
         }
 
-        $this->removeProvider($providerName);
-    }
+        //  Valid the given prepared provider
+        if (!$this->isValidProviderPrepared($providerName)) {
+            throw new InvalidArgumentException("La methode d'authentification est invalide.");
+        }
 
-    public function allProvidersAuthenticated(): bool
-    {
-        return 0 === count($this->providers);
-    }
+        // clear previous prepared provider
+        $this->clearProviderPrepared();
 
-    public function isProviderPrepared(string $providerName): bool
-    {
-        return $this->preparedProviders[$providerName] ?? false;
-    }
-
-    public function setProviderPrepared(string $providerName): void
-    {
+        // Add new prepared provider
         $this->preparedProviders[$providerName] = true;
     }
 
-    /**
-     * @throws Exception
-     */
-    private function removeProvider(string $providerName): void
+    public function clearProviderPrepared(): void
     {
-        $key = array_search($providerName, $this->providers, true);
-        if (false === $key) {
-            throw new Exception(sprintf('Two-factor provider "%s" is not active.', $providerName));
-        }
+        $this->preparedProviders = [];
+    }
 
-        unset($this->providers[$key]);
+    public function isValidProviderPrepared(string $providerName): bool
+    {
+        return in_array($providerName, $this->providers);
     }
 }

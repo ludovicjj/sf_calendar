@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Choisir la méthode 2FA{% endblock %}
+
+{% block body %}
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+
+            <h2 class="text-2xl font-bold mb-6 text-center">Activation d'authentification</h2>
+            <p class="text-gray-600 mb-6 text-center">{{ providersData }}</p>
+
+            {{ form_start(form) }}
+            {% if form.totpSecret is defined %}
+                <div class="flex justify-center mb-2">
+                    <img src="{{ path('app_qr_code', {'code' : form.totpSecret.vars.value}) }}" alt="2fa QR Code">
+                </div>
+                {{ form_widget(form.totpSecret) }}
+            {% endif %}
+
+            {% if form.phoneNumber is defined %}
+                <div class="mb-2">
+                    {{ form_label(form.phoneNumber) }}
+                    {{ form_widget(form.phoneNumber) }}
+                    {{ form_errors(form.phoneNumber) }}
+                </div>
+            {% endif %}
+
+            {% if form.email is defined %}
+                <div class="mb-2">
+                    {{ form_label(form.email) }}
+                    {{ form_widget(form.email) }}
+                    {{ form_errors(form.email) }}
+                </div>
+            {% endif %}
+                <div class="flex justify-center">
+                    <button type="submit"
+                            formnovalidate
+                            class="w-full bg-blue-500 text-white py-2 px-4
+                        rounded-lg hover:bg-blue-600
+                        focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        Valider
+                    </button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

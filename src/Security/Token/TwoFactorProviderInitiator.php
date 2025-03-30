@@ -8,14 +8,13 @@ readonly class TwoFactorProviderInitiator
 {
     public function __construct(
         private TwoFactorTokenFactoryInterface $twoFactorTokenFactory,
-    )
-    {
+    ) {
     }
 
     public function beginTwoFactorAuthentication(
         AuthenticationContextInterface $authenticationContext
     ): ?TwoFactorTokenInterface {
-        $activeProviders = $this->getActiveProviders($authenticationContext);
+        $activeProviders = $authenticationContext->getActiveProviders();
         $authenticatedToken = $authenticationContext->getToken();
 
         if ($activeProviders) {
@@ -27,12 +26,5 @@ readonly class TwoFactorProviderInitiator
         }
 
         return null;
-    }
-
-    private function getActiveProviders(AuthenticationContextInterface $authenticationContext): array
-    {
-        return [
-            'email'
-        ];
     }
 }
