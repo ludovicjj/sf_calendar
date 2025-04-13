@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Security\Entity\TwoFactorEmailInterface;
+use App\Security\Entity\TwoFactorSmsInterface;
+use App\Security\Entity\TwoFactorTotpInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +14,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements
+    UserInterface,
+    PasswordAuthenticatedUserInterface,
+    TwoFactorEmailInterface,
+    TwoFactorSmsInterface,
+    TwoFactorTotpInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

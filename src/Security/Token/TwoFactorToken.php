@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class TwoFactorToken implements TwoFactorTokenInterface
 {
-    private array $preparedProviders = [];
+    private array $selectedProviders = [];
 
     public function __construct(
         private readonly TokenInterface $authenticatedToken,
@@ -82,7 +82,7 @@ class TwoFactorToken implements TwoFactorTokenInterface
             $this->firewallName,
             $this->attributes,
             $this->providers,
-            $this->preparedProviders,
+            $this->selectedProviders,
         ];
     }
 
@@ -94,7 +94,7 @@ class TwoFactorToken implements TwoFactorTokenInterface
             $this->firewallName,
             $this->attributes,
             $this->providers,
-            $this->preparedProviders,
+            $this->selectedProviders,
         ] = $data;
     }
 
@@ -112,8 +112,8 @@ class TwoFactorToken implements TwoFactorTokenInterface
     {
         $credentialsToken = new self($this->authenticatedToken, $credentials, $this->firewallName, $this->providers);
 
-        foreach (array_keys($this->preparedProviders) as $preparedProviderName) {
-            $credentialsToken->setProviderPrepared($preparedProviderName);
+        foreach (array_keys($this->selectedProviders) as $selectedProviderName) {
+            $credentialsToken->setSelectedProvider($selectedProviderName);
         }
 
         $credentialsToken->setAttributes($this->getAttributes());
@@ -132,17 +132,23 @@ class TwoFactorToken implements TwoFactorTokenInterface
     }
 
 
-    public function getCurrentProvider(): ?string
+    public function getCurrentProviderName(): ?string
     {
-        return array_key_first($this->preparedProviders);
+        return array_key_first($this->selectedProviders);
     }
 
-    public function isProviderPrepared(): bool
+
+    public function isSelectedProviderPrepared(): bool
+    {
+        return $this->selectedProviders[$this->getCurrentProviderName()] ?? false;
+    }
+
+    private function isProviderPrepared(string $selectedProviderName): bool
     {
         /** @var User $user */
         $user = $this->getUser();
 
-        return match($this->getCurrentProvider()) {
+        return match($selectedProviderName) {
             'email' => $user->isEmailAuthenticationEnabled(),
             'sms'   => $user->isSmsAuthenticationEnabled(),
             'totp'  => $user->isTotpAuthenticationEnabled(),
@@ -153,31 +159,30 @@ class TwoFactorToken implements TwoFactorTokenInterface
     /**
      * @throws InvalidArgumentException
      */
-    public function setProviderPrepared(?string $providerName): void
+    public function setSelectedProvider(?string $selectedProviderName): void
     {
-        if (!$providerName) {
+        if (!$selectedProviderName) {
             throw new InvalidArgumentException("Vous devez choisir une methode d'authentification.");
         }
 
-        //  Valid the given prepared provider
-        if (!$this->isValidProviderPrepared($providerName)) {
+        //  Valid the given selected provider
+        if (!$this->isValidSelectedProvider($selectedProviderName)) {
             throw new InvalidArgumentException("La methode d'authentification est invalide.");
         }
 
-        // clear previous prepared provider
-        $this->clearProviderPrepared();
+        // Reset previous selected provider
+        $this->clearSelectedProvider();
 
-        // Add new prepared provider
-        $this->preparedProviders[$providerName] = true;
+        $this->selectedProviders[$selectedProviderName] = $this->isProviderPrepared($selectedProviderName);
     }
 
-    public function clearProviderPrepared(): void
+    public function clearSelectedProvider(): void
     {
-        $this->preparedProviders = [];
+        $this->selectedProviders = [];
     }
 
-    public function isValidProviderPrepared(string $providerName): bool
+    public function isValidSelectedProvider(string $selectedProviderName): bool
     {
-        return in_array($providerName, $this->providers);
+        return in_array($selectedProviderName, $this->providers);
     }
 }

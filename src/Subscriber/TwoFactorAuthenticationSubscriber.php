@@ -34,7 +34,7 @@ readonly class TwoFactorAuthenticationSubscriber implements EventSubscriberInter
         $token = $event->getToken();
         /** @var User $user */
         $user = $token->getUser();
-        $providerName = $token->getCurrentProvider();
+        $providerName = $token->getCurrentProviderName();
 
         $this->codeGenerator->generateAndSend($user, $providerName);
     }

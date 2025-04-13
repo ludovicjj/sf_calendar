@@ -23,9 +23,9 @@ class EnableTwoFactorType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $currentProvider = $options['current_provider'];
+        $providerName = $options['provider_name'];
 
-        if ($currentProvider === 'sms') {
+        if ($providerName === 'sms') {
             $builder->add('phoneNumber', TelType::class, [
                 'label' => 'Numéro de téléphone',
                 'constraints' => [
@@ -33,7 +33,7 @@ class EnableTwoFactorType extends AbstractType
                     new Length(min: 10)
                 ]
             ]);
-        } elseif ($currentProvider === 'email') {
+        } elseif ($providerName === 'email') {
             $builder->add('email', EmailType::class, [
                 'label' => 'Adresse email',
                 'constraints' => [
@@ -41,7 +41,7 @@ class EnableTwoFactorType extends AbstractType
                     new Email()
                 ]
             ]);
-        } elseif ($currentProvider === 'totp') {
+        } elseif ($providerName === 'totp') {
             $builder->add('totpSecret', HiddenType::class, [
                 'data' => $this->totpGenerator->generateSecret(),
             ]);
@@ -53,7 +53,7 @@ class EnableTwoFactorType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'current_provider' => null,
+            'provider_name' => null,
         ]);
     }
 }

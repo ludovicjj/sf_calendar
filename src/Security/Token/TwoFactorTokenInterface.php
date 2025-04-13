@@ -43,12 +43,12 @@ interface TwoFactorTokenInterface extends TokenInterface
     /**
      * Return the alias of the two-factor provider, which is currently active.
      */
-    public function getCurrentProvider(): ?string;
+    public function getCurrentProviderName(): ?string;
 
     /**
      * Check if a two-factor provider has completed preparation. The provider's alias is passed as the argument.
      */
-    public function isProviderPrepared(): bool;
+    public function isSelectedProviderPrepared(): bool;
 
     /**
      * Define the provider selected by the user for 2FA. The provider's alias is passed as the argument.
@@ -56,15 +56,15 @@ interface TwoFactorTokenInterface extends TokenInterface
      * Reset selected Provider each time the user change the selected provider
      * @throws InvalidArgumentException
      */
-    public function setProviderPrepared(string $providerName): void;
+    public function setSelectedProvider(string $selectedProviderName): void;
 
     /**
-     * Remove all prepared providers
+     * Remove all selected providers
      */
-    public function clearProviderPrepared(): void;
+    public function clearSelectedProvider(): void;
 
     /**
-     * Valid prepared provider
+     * Valid selected provider
      */
-    public function isValidProviderPrepared(string $providerName): bool;
+    public function isValidSelectedProvider(string $selectedProviderName): bool;
 }

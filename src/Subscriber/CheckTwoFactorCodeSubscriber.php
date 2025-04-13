@@ -29,7 +29,7 @@ class CheckTwoFactorCodeSubscriber implements EventSubscriberInterface
         $twoFactorCredentialBadge = $passport->getBadge(TwoFactorCodeCredentials::class);
         assert($twoFactorCredentialBadge instanceof TwoFactorCodeCredentials);
         $token = $twoFactorCredentialBadge->getTwoFactorToken();
-        $providerName = $token->getCurrentProvider();
+        $providerName = $token->getCurrentProviderName();
 
         if (!$this->isValideCode($providerName, $token->getUser(), $twoFactorCredentialBadge->getCode())) {
             throw new TwoFactorCodeException(TwoFactorCodeException::MESSAGE);

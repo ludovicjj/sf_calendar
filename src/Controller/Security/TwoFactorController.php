@@ -39,16 +39,14 @@ class TwoFactorController extends AbstractController
             $this->redirectToRoute('app_login');
         }
 
-        // Clear selected Provider if user play with navigate between previous or next page
-        $token->clearProviderPrepared();
         $activeProvidersData = $twoFactorConfig->getActiveProviderData($token->getProviders());
 
         if ($request->isMethod('POST')) {
-            $providerName = $request->request->get('auth_method');
+            $selectedProviderName = $request->request->get('auth_method');
 
             try {
-                $token->setProviderPrepared($providerName);
-                $isPrepared = $token->isProviderPrepared();
+                $token->setSelectedProvider($selectedProviderName);
+                $isPrepared = $token->isSelectedProviderPrepared();
                 if (!$isPrepared) {
                     return $this->redirectToRoute('app_2fa_authenticate_enable');
                 }
@@ -85,23 +83,18 @@ class TwoFactorController extends AbstractController
 
         /** @var User $user */
         $user = $token->getUser();
+        $providerName = $token->getCurrentProviderName();
 
         if (!$user instanceof User) {
             return $this->redirectToRoute('app_login');
         }
 
-        $currentProvider = $token->getCurrentProvider();
-
-        if (!$currentProvider) {
-            return $this->redirectToRoute('app_2fa_authenticate');
-        }
-
-        if ($token->isProviderPrepared()) {
+        if ($token->isSelectedProviderPrepared()) {
             return $this->redirectToRoute('app_2fa_authenticate');
         }
 
         $form = $this->createForm(EnableTwoFactorType::class, $user, [
-            'current_provider' => $currentProvider,
+            'provider_name' => $providerName,
         ])->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -112,11 +105,10 @@ class TwoFactorController extends AbstractController
             return $this->redirectToRoute('app_2fa_authenticate_check');
         }
 
-        $activeProvidersData = $twoFactorConfig->getEnableProviderData($currentProvider);
+        $activeProvidersData = $twoFactorConfig->getEnableProviderData($providerName);
 
         return $this->render('security/2fa_authentication_enable.html.twig', [
             'providersData' => $activeProvidersData,
-            'currentProvider' => $currentProvider,
             'form' => $form
         ]);
     }
@@ -130,13 +122,13 @@ class TwoFactorController extends AbstractController
 
         $token = $this->tokenStorage->getToken();
         assert($token instanceof TwoFactorTokenInterface);
-        $currentProvider = $token->getCurrentProvider();
+        $providerName = $token->getCurrentProviderName();
 
-        if (!$currentProvider) {
+        if (!$providerName) {
             return $this->redirectToRoute('app_2fa_authenticate');
         }
 
-        $processDescription = $twoFactorConfig->getSelectedProviderData($currentProvider);
+        $processDescription = $twoFactorConfig->getSelectedProviderData($providerName);
 
         return $this->render('security/2fa_email_form.html.twig', [
             'error' => $error,
