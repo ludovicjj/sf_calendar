@@ -1,0 +1,50 @@
+<div {{ attributes.defaults({
+    class: class_names({
+        'menu sticky top-0 h-screen w-16 transition-all duration-300 ease-in-out bg-gray-800 text-white': true,
+        'open': open
+    }),
+}) }} data-controller="menu"
+>
+    <div class="flex flex-col h-full">
+        {# Brand #}
+        <div class="py-4 px-4 brand h-[60px]">
+            <a class="flex items-center justify-center" href="{{ path('app_home') }}">
+                {# 28 x 22.31 #}
+                <img src="https://getbootstrap.com/docs/5.2/assets/brand/bootstrap-logo.svg" alt="Logo" class="w-8">
+            </a>
+        </div>
+
+        {# Menu Links #}
+        <div class="relative flex-1">
+            <div class="nav-fade nav-fade-top"></div>
+            <nav class="flex-1 px-2 py-4 space-y-2 overflow-x-hidden">
+                {% for link in links %}
+                    <a href="#" class="flex p-2 text-white rounded-lg hover:bg-gray-700 group">
+                        <span class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white flex items-center justify-center">
+                            {{ ux_icon(link.icon, {class: 'w-6 h-6'}) }}
+                        </span>
+                        {% if open %}
+                            <span class="ml-3 whitespace-nowrap nav-label">{{ link.label }}</span>
+                        {% endif %}
+                    </a>
+                {% endfor %}
+            </nav>
+            <div class="nav-fade nav-fade-bottom"></div>
+        </div>
+
+        {# User Profile #}
+        <div class="border-t border-gray-700 p-4 overflow-hidden">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <img class="h-8 w-8 rounded-full" src="https://picsum.photos/150/150" alt="Avatar">
+                </div>
+                {% if open %}
+                    <div class="ml-3 user-info">
+                        <p class="text-sm font-medium email-truncate">{{ app.user ? app.user.email : 'Utilisateur' }}</p>
+                        <a href="{{ path('app_logout') }}" class="text-xs text-gray-400 hover:text-white">Déconnexion</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

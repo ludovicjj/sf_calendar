@@ -1,0 +1,62 @@
+.menu.open {
+    width: 200px;
+}
+/** Hide label **/
+.menu.close .brand a span.brand-label {
+    display: none;
+}
+.menu.close nav a span.nav-label {
+    display: none;
+}
+
+/** menu link : fix svg on align **/
+.menu.close nav a {
+    display: flex;
+    justify-content: center;
+    flex: 0 0 auto;
+    padding: 0.5rem;
+    width: 40px;
+}
+/** menu link : scrollbar **/
+.menu nav {
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    max-height: calc(100vh - 120px);
+}
+.menu nav::-webkit-scrollbar {
+    display: none;
+}
+
+/** menu link : nav-fade **/
+.menu .nav-fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 30px;
+    pointer-events: none;
+    z-index: 10;
+}
+.menu .nav-fade-bottom {
+    background: linear-gradient(to top, rgba(31, 41, 55, 1), rgba(31, 41, 55, 0));
+    bottom: 0;
+}
+.menu .nav-fade-top {
+    background: linear-gradient(to bottom, rgba(31, 41, 55, 1), rgba(31, 41, 55, 0));
+    top: 0;
+}
+
+/* User info **/
+.menu.close .user-info {
+    display: none;
+}
+.menu.open .user-info .email-truncate {
+    max-width: 115px; /* usefull for text-overflow: ellipsis */
+}
+.user-info .email-truncate {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}

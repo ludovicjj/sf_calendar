@@ -7,6 +7,7 @@ import {parseEvent} from "../../utils/eventUtils";
 import PropTypes from "prop-types";
 import CalendarModal from "./CalendarModal";
 import {ToastContextProvider} from "../ToastContext";
+import '../../../styles/calendar.css'
 
 export default function CalendarApp ({ initialEvents }) {
     // State current Date
