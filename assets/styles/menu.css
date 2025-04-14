@@ -1,22 +1,29 @@
+.menu {
+    position: sticky;
+    top: 0;
+    width: 4rem;
+    height: 100vh;
+    transition: width 0.4s ease-in-out;
+}
 .menu.open {
     width: 200px;
 }
-/** Hide label **/
-.menu.close .brand a span.brand-label {
-    display: none;
+/** Toggle menu (open/close) **/
+.menu .toggle {
+    transform: translateX(50%)rotate(45deg);
+    transition: opacity 300ms ease-in-out;
 }
-.menu.close nav a span.nav-label {
-    display: none;
+.menu .toggle svg {
+    transform: rotate(-45deg);
+}
+/** Hide label **/
+.menu.close .brand a span.brand-label,
+.menu.close nav a span.link-label {
+    transition: opacity 300ms ease-in-out;
+    opacity: 0;
+    pointer-events: none;
 }
 
-/** menu link : fix svg on align **/
-.menu.close nav a {
-    display: flex;
-    justify-content: center;
-    flex: 0 0 auto;
-    padding: 0.5rem;
-    width: 40px;
-}
 /** menu link : scrollbar **/
 .menu nav {
     overflow-y: auto;

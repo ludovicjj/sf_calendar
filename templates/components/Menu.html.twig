@@ -1,17 +1,22 @@
 <div {{ attributes.defaults({
     class: class_names({
-        'menu sticky top-0 h-screen w-16 transition-all duration-300 ease-in-out bg-gray-800 text-white': true,
+        'menu bg-gray-800 text-white': true,
         'open': open
     }),
 }) }} data-controller="menu"
 >
     <div class="flex flex-col h-full">
         {# Brand #}
-        <div class="py-4 px-4 brand h-[60px]">
+        <div class="relative py-4 px-4 h-[80px]">
             <a class="flex items-center justify-center" href="{{ path('app_home') }}">
-                {# 28 x 22.31 #}
-                <img src="https://getbootstrap.com/docs/5.2/assets/brand/bootstrap-logo.svg" alt="Logo" class="w-8">
+                <img src="{{ asset('build/images/logo-icon.svg') }}" alt="Logo" class="w-11">
             </a>
+            <div
+                    class="toggle flex items-center justify-center bg-gray-800 hover:bg-gray-700 w-[30px] h-[30px] absolute top-[55px] right-0 z-20"
+                    data-action="click->menu#toggleMenu"
+            >
+                {{ ux_icon('uil:arrow', {class: 'w-5 h-5'}) }}
+            </div>
         </div>
 
         {# Menu Links #}
@@ -20,11 +25,11 @@
             <nav class="flex-1 px-2 py-4 space-y-2 overflow-x-hidden">
                 {% for link in links %}
                     <a href="#" class="flex p-2 text-white rounded-lg hover:bg-gray-700 group">
-                        <span class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white flex items-center justify-center">
+                        <span class="link-icon flex items-center justify-center flex-shrink-0 w-[30px] h-6 text-gray-400 transition duration-75 group-hover:text-white">
                             {{ ux_icon(link.icon, {class: 'w-6 h-6'}) }}
                         </span>
                         {% if open %}
-                            <span class="ml-3 whitespace-nowrap nav-label">{{ link.label }}</span>
+                            <span class="link-label ml-3 whitespace-nowrap">{{ link.label }}</span>
                         {% endif %}
                     </a>
                 {% endfor %}
