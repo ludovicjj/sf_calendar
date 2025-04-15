@@ -1,7 +1,7 @@
 import React from 'react';
 import {useToasts} from "../ToastContext";
 
-export default function ({ currentDate, setCurrentDate, setIsModalOpen }) {
+export default function ({ currentDate, setCurrentDate, setIsModalOpen, setMode, mode }) {
     const goToToday = () => {
         setCurrentDate(new Date());
     };
@@ -14,6 +14,10 @@ export default function ({ currentDate, setCurrentDate, setIsModalOpen }) {
 
     const goToNextMonth = () => {
         setCurrentDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1));
+    };
+
+    const handleModeChange = (event) => {
+        setMode(event.target.value);
     };
 
     const addToast = () => {
@@ -66,6 +70,14 @@ export default function ({ currentDate, setCurrentDate, setIsModalOpen }) {
 
             {/* Bouton Ajouter un événement */}
             <div className="flex items-center gap-1">
+                <select
+                    value={mode}
+                    onChange={handleModeChange}
+                    className="select-thin-arrow block w-[150px] p-2 border border-grey-900 rounded-lg focus:outline-none cursor-pointer"
+                >
+                    <option value="month">Mois</option>
+                    <option value="week">Semaine</option>
+                </select>
                 <button
                     type="button"
                     className="border border-grey-900 p-2 rounded-lg transition-colors duration-200 ease-in-out hover:bg-gray-200 focus:outline-none"

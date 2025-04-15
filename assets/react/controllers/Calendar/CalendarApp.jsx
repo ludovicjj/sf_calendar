@@ -19,6 +19,8 @@ export default function CalendarApp ({ initialEvents }) {
     // State selected event
     const [selectedEvent, setSelectedEvent] = useState(null);
 
+    const [mode, setMode] = useState('month');
+
     // State Events list
     const [eventsMap, setEventsMap] = useState(() => {
         const parsedEvents = parseEvent(initialEvents);
@@ -113,6 +115,8 @@ export default function CalendarApp ({ initialEvents }) {
                     currentDate={currentDate}
                     setCurrentDate={setCurrentDate}
                     setIsModalOpen={setIsModalOpen}
+                    setMode={setMode}
+                    mode={mode}
                 />
                 <CalendarGrid
                     currentDate={currentDate}

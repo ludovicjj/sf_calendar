@@ -10,8 +10,9 @@
 }
 /** Toggle menu (open/close) **/
 .menu .toggle {
-    transform: translateX(50%)rotate(45deg);
+    transform: translateX(47%)rotate(45deg);
     transition: opacity 300ms ease-in-out;
+    border-radius:5px;
 }
 .menu .toggle svg {
     transform: rotate(-45deg);
