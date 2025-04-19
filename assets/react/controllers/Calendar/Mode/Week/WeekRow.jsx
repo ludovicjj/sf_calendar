@@ -15,13 +15,30 @@ const getEventHours= (event)  => {
 
     const hours = [];
     for (let hour = startHour; hour <= endHour; hour++) {
-        // Un événement qui se termine à X:00 n'est pas visible dans l'heure X
+        // Un événement qui se termine à X:00 n'est pas visible dans l'heure X !!
         if (hour === endHour && endMinutes === 0) continue;
         hours.push(hour);
     }
 
     return hours;
 }
+
+/**
+ * Vérifie si deux événements se chevauchent réellement en temps
+ * @param {Object} currentEvent - Événement en cours de positionnement
+ * @param {Object} prevEvent - Événement precédent
+ * @returns {boolean} - True si les événements se chevauchent
+ */
+const eventsOverlap = (currentEvent, prevEvent) => {
+    const currentStart = currentEvent.start.getTime();
+    const currentEnd = currentEvent.end.getTime();
+
+    const prevStart = prevEvent.start.getTime();
+    const prevEnd = prevEvent.end.getTime();
+
+    // Vérifier si les plages temporelles se chevauchent
+    return currentStart < prevEnd && currentEnd > prevStart;
+};
 
 export default function WeekRow ({dayEvents, openModal}) {
     const eventsWithPositions = useMemo(() => {
@@ -37,10 +54,7 @@ export default function WeekRow ({dayEvents, openModal}) {
 
             // Vérifier uniquement les événements précédents
             events.slice(0, index).forEach(prevEvent => {
-                const prevEventHours = getEventHours(prevEvent);
-                const hasOverlap = eventHours.some(hour =>
-                    prevEventHours.includes(hour)
-                );
+                const hasOverlap = eventsOverlap(event, prevEvent);
 
                 if (hasOverlap && eventPositions.has(prevEvent.token)) {
                     maxPosition = Math.max(maxPosition, eventPositions.get(prevEvent.token));
