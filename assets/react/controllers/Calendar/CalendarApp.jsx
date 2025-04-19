@@ -19,7 +19,7 @@ export default function CalendarApp ({ initialEvents }) {
     // State selected event
     const [selectedEvent, setSelectedEvent] = useState(null);
 
-    const [mode, setMode] = useState('month');
+    const [mode, setMode] = useState('week');
 
     // State Events list
     const [eventsMap, setEventsMap] = useState(() => {
@@ -122,6 +122,7 @@ export default function CalendarApp ({ initialEvents }) {
                     currentDate={currentDate}
                     eventsMap={eventsMap}
                     openModal={openModal}
+                    mode={mode}
                 />
                 <CalendarModal
                     isOpen={isModalOpen}

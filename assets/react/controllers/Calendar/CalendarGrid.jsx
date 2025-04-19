@@ -1,20 +1,20 @@
 import React from 'react';
-import CalendarRow from "./CalendarRow";
+import WeekContainer from "./Mode/Week/WeekContainer";
+import MonthView from "./Mode/Month/MonthView";
 import PropTypes from "prop-types";
 
-export default function CalendarGrid ({ currentDate, eventsMap, openModal }) {
-    const weekDays = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+export default function CalendarGrid ({ currentDate, eventsMap, openModal, mode }) {
+
+    const VIEW_COMPONENTS = {
+        'month': MonthView,
+        'week': WeekContainer,
+    };
+
+    const ViewComponent = VIEW_COMPONENTS[mode] || MonthView;
 
     return (
         <div className="calendar">
-            <div className="flex flex-row" role="row">
-                {weekDays.map((day, index) => (
-                    <div key={index} className="flex-1 border-b border-gray-200">
-                        <p className="text-right text-sm font-normal text-gray-600 py-1 px-2">{day}</p>
-                    </div>
-                ))}
-            </div>
-            <CalendarRow
+            <ViewComponent
                 currentDate={currentDate}
                 eventsMap={eventsMap}
                 openModal={openModal}

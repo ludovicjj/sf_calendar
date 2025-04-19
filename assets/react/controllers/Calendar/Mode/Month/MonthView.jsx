@@ -1,9 +1,10 @@
 import React from 'react';
-import {endOfMonth, endOfWeek, getDaysBetween, startOfWeek} from "../../utils/dateUtils";
-import CalendarCell from "./CalendarCell";
+import {endOfMonth, endOfWeek, getDaysBetween, startOfWeek} from "../../../../utils/dateUtils";
+import MonthCell from "./MonthCell";
+import MonthHeader from "./MonthHeader";
 import PropTypes from "prop-types";
 
-export default function CalendarRow ({currentDate, eventsMap, openModal}) {
+export default function MonthView ({currentDate, eventsMap, openModal}) {
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0)
     const start = startOfWeek(firstDayOfMonth)
     const end = endOfWeek(endOfMonth(firstDayOfMonth))
@@ -17,17 +18,18 @@ export default function CalendarRow ({currentDate, eventsMap, openModal}) {
 
     return (
         <div>
-            {weeks.map((week, weekIndex) => {
+            <MonthHeader />
+            {weeks.map((week, index) => {
                 const positionMap = new Map()
 
                 return (
                     <div
-                        key={weekIndex}
+                        key={index}
                         className="calendar-row"
                     >
-                        {week.map((dayOfWeek, dayIndex) => (
-                            <CalendarCell
-                                key={dayIndex}
+                        {week.map((dayOfWeek, index) => (
+                            <MonthCell
+                                key={index}
                                 dayOfWeek={dayOfWeek}
                                 currentDate={currentDate}
                                 eventsMap={eventsMap}
@@ -42,7 +44,7 @@ export default function CalendarRow ({currentDate, eventsMap, openModal}) {
     );
 }
 
-CalendarRow.propTypes = {
+MonthView.propTypes = {
     currentDate: PropTypes.instanceOf(Date).isRequired,
     eventsMap: PropTypes.instanceOf(Map).isRequired,
     openModal: PropTypes.func.isRequired,
