@@ -4,26 +4,6 @@ import WeekCell from "./WeekCell";
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
 /**
- * Obtient toutes les heures où un événement est présent
- * @param {Object} event - L'événement
- * @returns {number[]} - Tableau des heures où l'événement est présent
- */
-const getEventHours= (event)  => {
-    const startHour = event.start.getHours();
-    const endHour = event.end.getHours();
-    const endMinutes = event.end.getMinutes();
-
-    const hours = [];
-    for (let hour = startHour; hour <= endHour; hour++) {
-        // Un événement qui se termine à X:00 n'est pas visible dans l'heure X !!
-        if (hour === endHour && endMinutes === 0) continue;
-        hours.push(hour);
-    }
-
-    return hours;
-}
-
-/**
  * Vérifie si deux événements se chevauchent réellement en temps
  * @param {Object} currentEvent - Événement en cours de positionnement
  * @param {Object} prevEvent - Événement precédent
@@ -47,8 +27,6 @@ export default function WeekRow ({dayEvents, openModal}) {
 
         // Attribuer les positions aux événements
         dayEvents.forEach((event, index, events) => {
-            const eventHours = getEventHours(event);
-
             // Trouver la position maximale utilisée par les événements précédents
             let maxPosition = -1;
 
