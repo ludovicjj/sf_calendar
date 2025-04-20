@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
  *
  * @param {Function} handleCloseModal - Fonction de fermeture de la modale
  * @param {Object|null} selectedEvent - événement en cours de modification
- * @param {Function} pushEvent - Fonction de creation/modification d'un événement
+ * @param {Function} updateEvent - Fonction de creation/modification d'un événement
  * @param {Function} removeEvent - Fonction de suppression d'un événement
  * @param startDatepickerVisibleRef - Reference
  * @param endDatepickerVisibleRef - Reference
@@ -23,7 +23,7 @@ export default function CalendarForm (
     {
         handleCloseModal,
         selectedEvent,
-        pushEvent,
+        updateEvent,
         removeEvent,
         startDatepickerVisibleRef,
         endDatepickerVisibleRef
@@ -131,10 +131,10 @@ export default function CalendarForm (
 
                 if (selectedEvent) {
                     addToast("Succès", "L'événement a été modifié avec succès.");
-                    pushEvent(event, selectedEvent);
+                    updateEvent(event, selectedEvent);
                 } else {
                     addToast("Succès", "L'événement a été créé avec succès.");
-                    pushEvent(event);
+                    updateEvent(event);
                 }
             }
         } catch (error) {

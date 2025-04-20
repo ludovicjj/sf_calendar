@@ -43,7 +43,7 @@ export default function CalendarApp ({ initialEvents }) {
         return map;
     });
 
-    const pushEvent = (newEvent, oldEvent = null) => {
+    const updateEvent = (newEvent, oldEvent = null) => {
         setEventsMap(prevMap => {
             const newMap = new Map(prevMap);
 
@@ -69,14 +69,17 @@ export default function CalendarApp ({ initialEvents }) {
                 if (!newMap.has(key)) {
                     newMap.set(key, []);
                 }
+
+                // add new event to Map
                 newMap.get(key).push(newEvent);
+                // Sort events by start date for this day
+                newMap.set(key, newMap.get(key).sort((a, b) => a.start < b.start ? -1 : 1));
             }
 
             return newMap
         })
     }
 
-    // Fonction pour supprimer un événement
     const removeEvent = (event) => {
         setEventsMap(prevMap => {
             const newMap = new Map(prevMap);
@@ -96,7 +99,6 @@ export default function CalendarApp ({ initialEvents }) {
         });
     };
 
-    // Fonction pour ouvrir la modale
     const openModal = (event = null) => {
         setSelectedEvent(event)
         setIsModalOpen(true)
@@ -128,7 +130,7 @@ export default function CalendarApp ({ initialEvents }) {
                     isOpen={isModalOpen}
                     closeModal={closeModal}
                     selectedEvent={selectedEvent}
-                    pushEvent={pushEvent}
+                    updateEvent={updateEvent}
                     removeEvent={removeEvent}
                 />
             </ToastContextProvider>
