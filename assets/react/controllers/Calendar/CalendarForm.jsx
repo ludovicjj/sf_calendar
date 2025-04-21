@@ -34,11 +34,11 @@ export default function CalendarForm (
 
     const colors = useMemo(() => {
         return [
-            { background: '#3788d8', value: 'blue' },
-            { background: '#74b057', value: 'green' },
-            { background: '#ff5858', value: 'red' },
-            { background: '#fcd34d', value: 'yellow' },
-            { background: '#9ca3af', value: 'gray' },
+            { class: 'bg-event-blue', value: 'blue' },
+            { class: 'bg-event-green', value: 'green' },
+            { class: 'bg-event-red', value: 'red' },
+            { class: 'bg-event-yellow', value: 'yellow' },
+            { class: 'bg-event-gray', value: 'gray' },
         ]
     }, [])
 

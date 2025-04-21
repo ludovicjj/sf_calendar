@@ -19,7 +19,7 @@ export default function CalendarApp ({ initialEvents }) {
     // State selected event
     const [selectedEvent, setSelectedEvent] = useState(null);
 
-    const [mode, setMode] = useState('week');
+    const [mode, setMode] = useState('month');
 
     // State Events list
     const [eventsMap, setEventsMap] = useState(() => {

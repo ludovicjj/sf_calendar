@@ -11,7 +11,7 @@ export default function ColorField({ colors, value, label, onChange }) {
     return (
         <div className="mb-4">
             <span className="text-sm font-medium text-gray-700">{label}</span>
-            <div className="flex gap-4 mt-1">
+            <div className="flex gap-3 mt-2">
                 {colors.map((color) => (
                     <label key={color.value} className="flex items-center color-item">
                         <input
@@ -23,11 +23,30 @@ export default function ColorField({ colors, value, label, onChange }) {
                             onChange={onChange}
                         />
                         <span
-                            className={`block w-[25px] h-[25px] rounded-full border-2 cursor-pointer ${
-                                value === color.value ? "border-black" : "border-gray-400"
-                            }`}
-                            style={{ backgroundColor: color.background }}
-                        />
+                            className={`
+                                w-[30px] h-[30px] rounded cursor-pointer
+                                hover:scale-110 transition-transform
+                                flex items-center justify-center shadow
+                                ${color.class} 
+                            `}
+                        >
+                             {value === color.value && (
+                                 <svg
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     className="h-5 w-5 text-white"
+                                     fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke="currentColor"
+                                 >
+                                     <path
+                                         strokeLinecap="round"
+                                         strokeLinejoin="round"
+                                         strokeWidth={2}
+                                         d="M5 11l6 6l10 -10"
+                                     />
+                                 </svg>
+                             )}
+                        </span>
                     </label>
                 ))}
             </div>

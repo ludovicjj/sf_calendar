@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function MonthHeader ({ daysOfWeek }) {
+export default function WeekHeader ({ daysOfWeek }) {
     const weekDays = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
 
     const today = new Date();
@@ -12,9 +12,8 @@ export default function MonthHeader ({ daysOfWeek }) {
             date.getDate() === today.getDate();
     };
 
-    // border-r last:border-r-0
     return (
-        <div className="flex flex-row border-b" role="row">
+        <div className="flex flex-row border-b sticky rounded-t-lg bg-white top-0 z-20" role="row">
             <div className="time-labels-column w-16 text-right pr-2"></div>
             {daysOfWeek.map((day, index) => {
                 const dayIsToday = isToday(day);

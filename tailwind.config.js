@@ -28,7 +28,14 @@ module.exports = {
       animation: {
         'toast-in': 'toast-in-right 0.3s ease-out, fade-in 0.3s ease-out',
         'toast-out': 'toast-out-right 0.3s ease-in forwards, fade-out 0.3s ease-in forwards'
-      }
+      },
+      colors: {
+        'event-red': '#ff5858',
+        'event-blue': '#3788d8',
+        'event-green': '#74b057',
+        'event-yellow': '#fcd34d',
+        'event-gray': '#9ca3af',
+      },
     },
   },
   plugins: [],

@@ -1,16 +1,16 @@
 import React from 'react';
 import WeekContainer from "./Mode/Week/WeekContainer";
-import MonthView from "./Mode/Month/MonthView";
+import MonthContainer from "./Mode/Month/MonthContainer";
 import PropTypes from "prop-types";
 
 export default function CalendarGrid ({ currentDate, eventsMap, openModal, mode }) {
 
     const VIEW_COMPONENTS = {
-        'month': MonthView,
+        'month': MonthContainer,
         'week': WeekContainer,
     };
 
-    const ViewComponent = VIEW_COMPONENTS[mode] || MonthView;
+    const ViewComponent = VIEW_COMPONENTS[mode] || MonthContainer;
 
     return (
         <div className="calendar">

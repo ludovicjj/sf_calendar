@@ -11,6 +11,17 @@ export default function WeekCell ({hour, events, openModal }) {
         startsInThisHour: event.start.getHours() === hour
     }));
 
+    const getColorClass = (color) => {
+        switch(color) {
+            case 'red': return 'bg-event-red';
+            case 'blue': return 'bg-event-blue';
+            case 'green': return 'bg-event-green';
+            case 'yellow': return 'bg-event-yellow';
+            case 'gray': return 'bg-event-gray';
+            default: return 'bg-event-blue';
+        }
+    };
+
     return (
         <div className="h-[60px] border-b border-gray-200 relative">
             {eventsWithStartFlag.map((event, index) => {
@@ -24,7 +35,10 @@ export default function WeekCell ({hour, events, openModal }) {
                     const startMinutes = eventStart.getMinutes();
                     const endMinutes = eventEnd.getMinutes();
 
+                    // Calcul topPercentage
                     const topPercentage = (startMinutes / 60) * 100;
+
+                    // Calcul totalHeightPercentage
                     let totalHeightPercentage
                     if (endHour === startHour) {
                         // Événement dans la même heure
@@ -35,15 +49,19 @@ export default function WeekCell ({hour, events, openModal }) {
                     }
                     totalHeightPercentage = Math.max(totalHeightPercentage, 1.67); // Au moins 1 minute
 
+                    // Position
                     const position = event.position;
                     let left = position * 5
                     let width =  95 - left
+
+                    // Couleur en fonction de l'événement
+                    const colorClass = getColorClass(event.color);
 
                     // Classes pour l'événement
                     const eventClasses = [
                         'absolute z-10 px-1 overflow-hidden cursor-pointer text-white text-xs',
                         'rounded-t rounded-b',
-                        event.color ? `calendar_event-${event.color}` : 'calendar_event-blue',
+                        colorClass,
                         position > 0 ? 'border border-white' : ''
                     ].filter(Boolean).join(' ');
 
@@ -59,7 +77,6 @@ export default function WeekCell ({hour, events, openModal }) {
                                 height: `${totalHeightPercentage}%`,
                                 width: `${width}%`,
                                 left: `${left}%`,
-                                backgroundColor: 'var(--color)'
                             }}
                             onClick={() => openModal(event)}
                             title={`${event.title} (${timeFormatter.format(eventStart)} - ${timeFormatter.format(eventEnd)})`}
