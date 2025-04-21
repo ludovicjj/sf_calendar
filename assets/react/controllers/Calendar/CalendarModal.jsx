@@ -19,7 +19,7 @@ export default function CalendarModal ({ isOpen, closeModal, selectedEvent, setS
     // State local pour gérer le mode de la modale
     const [modalView, setModalView] = useState(null);
 
-    // Refs pour les datepickers
+    // Refs pour les dates pickers
     const startDatepickerVisibleRef = useRef(false);
     const endDatepickerVisibleRef = useRef(false);
 
@@ -81,7 +81,7 @@ export default function CalendarModal ({ isOpen, closeModal, selectedEvent, setS
 
     // Close modal when user click outside
     const onClick = useCallback((e) => {
-        // Empêcher la propagation de l'événement si l'utilisateur clique sur un élément avec la classe calendar-btn
+        // Empêcher la propagation de l'événement si l'utilisateur clique sur un élément avec la classe ".calendar-btn"
         if (!e.target.closest('.calendar-btn')) {
             startDatepickerVisibleRef.current = false;
             endDatepickerVisibleRef.current = false;
@@ -105,7 +105,7 @@ export default function CalendarModal ({ isOpen, closeModal, selectedEvent, setS
         setModalView(MODAL_VIEWS.SUMMARY)
     }
 
-    const showDelete = (event) => {
+    const showDelete = () => {
         setModalView(MODAL_VIEWS.DELETE)
     }
 
