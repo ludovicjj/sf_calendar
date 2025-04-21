@@ -43,7 +43,7 @@ export default function CalendarApp ({ initialEvents }) {
         return map;
     });
 
-    const updateEvent = (newEvent, oldEvent = null) => {
+    const handleUpdateEvent = (newEvent, oldEvent = null) => {
         setEventsMap(prevMap => {
             const newMap = new Map(prevMap);
 
@@ -80,7 +80,7 @@ export default function CalendarApp ({ initialEvents }) {
         })
     }
 
-    const removeEvent = (event) => {
+    const handleRemoveEvent = (event) => {
         setEventsMap(prevMap => {
             const newMap = new Map(prevMap);
 
@@ -130,8 +130,10 @@ export default function CalendarApp ({ initialEvents }) {
                     isOpen={isModalOpen}
                     closeModal={closeModal}
                     selectedEvent={selectedEvent}
-                    updateEvent={updateEvent}
-                    removeEvent={removeEvent}
+                    setSelectedEvent={setSelectedEvent}
+                    handleUpdateEvent={handleUpdateEvent}
+                    handleRemoveEvent={handleRemoveEvent}
+                    eventsMap={eventsMap}
                 />
             </ToastContextProvider>
         </div>

@@ -57,3 +57,50 @@ function parseDateWithoutTimezone(dateString) {
     const iso = new Date(dateString).toISOString().slice(0, -1)
     return new Date(iso);
 }
+
+/**
+ * Récupère le background color d'un événement
+ * @param {string|null} color
+ * @return {string}
+ */
+export function getColorClass(color) {
+    switch(color) {
+        case 'red': return 'bg-event-red';
+        case 'blue': return 'bg-event-blue';
+        case 'green': return 'bg-event-green';
+        case 'yellow': return 'bg-event-yellow';
+        case 'gray': return 'bg-event-gray';
+        default: return 'bg-event-blue';
+    }
+}
+
+// Formateur pour les dates
+const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+});
+
+// Formateur pour les heures
+const timeFormatter = new Intl.DateTimeFormat('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit'
+});
+
+export function formatEventDate(event) {
+    if (event.fullDay) {
+        // Événement sur toute la journée
+        const startDate = dateFormatter.format(new Date(event.start));
+        const endDate = dateFormatter.format(new Date(event.end));
+
+        return `Du ${startDate} au ${endDate}`;
+    } else {
+        // Événement horaire
+        const startDate = dateFormatter.format(new Date(event.start));
+        const startTime = timeFormatter.format(new Date(event.start));
+        const endTime = timeFormatter.format(new Date(event.end));
+
+        return `${startDate} ⋅ De ${startTime} à ${endTime}`
+    }
+}

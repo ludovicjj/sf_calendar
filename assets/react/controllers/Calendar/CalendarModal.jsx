@@ -1,15 +1,46 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import ReactDOM from "react-dom";
-import '../../../styles/air-datepicker.css'
-import CalendarForm from "./CalendarForm";
+import FormView from "./Modal/View/FormView";
+import DayView from "./Modal/View/DayView";
+import SummaryView from "./Modal/View/SummaryView";
+import DeleteView from "./Modal/View/DeleteView";
 
-export default function CalendarModal ({ isOpen, closeModal, selectedEvent, updateEvent, removeEvent }) {
-    // Ref
+// Modes disponibles pour la modale
+const MODAL_VIEWS = {
+    SEE_MORE: 'see-more',
+    SUMMARY: 'summary',
+    EDIT: 'edit',
+    CREATE: 'create',
+    DELETE: 'delete'
+};
+
+export default function CalendarModal ({ isOpen, closeModal, selectedEvent, setSelectedEvent, handleUpdateEvent, handleRemoveEvent, eventsMap }) {
+
+    // State local pour gérer le mode de la modale
+    const [modalView, setModalView] = useState(null);
+
+    // Refs pour les datepickers
     const startDatepickerVisibleRef = useRef(false);
     const endDatepickerVisibleRef = useRef(false);
+
+    // Refs pour l'animation
     const modalRef = useRef(null);
     const modalWrapperRef = useRef(null);
 
+    useEffect(() => {
+        if (!selectedEvent) {
+            // Pas d'événement sélectionné = mode création
+            setModalView(MODAL_VIEWS.CREATE);
+        } else if (selectedEvent.type === 'day-view') {
+            // Voir tous les événements d'un jour
+            setModalView(MODAL_VIEWS.SEE_MORE);
+        } else {
+            // Événement spécifique sélectionné = afficher le résumé
+            setModalView(MODAL_VIEWS.SUMMARY);
+        }
+    }, [selectedEvent]);
+
+    // Animation d'ouverture
     useEffect(() => {
         let timer = null
         if (isOpen) {
@@ -34,9 +65,7 @@ export default function CalendarModal ({ isOpen, closeModal, selectedEvent, upda
         }
     }, [isOpen])
 
-    /**
-     * Ferme la modale apres avoir joué l'animation de fermeture
-     */
+    // Animation de fermeture
     const handleCloseModal = () => {
         const modal = modalRef.current
         const modalWrapper = modalWrapperRef.current
@@ -50,17 +79,84 @@ export default function CalendarModal ({ isOpen, closeModal, selectedEvent, upda
         setTimeout(() => closeModal(), 300);
     }
 
-    const onClick = (e) => {
-        if(!e.target.closest('.calendar-btn')) {
-            startDatepickerVisibleRef.current = !startDatepickerVisibleRef.current;
-            endDatepickerVisibleRef.current = !endDatepickerVisibleRef.current;
+    // Close modal when user click outside
+    const onClick = useCallback((e) => {
+        // Empêcher la propagation de l'événement si l'utilisateur clique sur un élément avec la classe calendar-btn
+        if (!e.target.closest('.calendar-btn')) {
+            startDatepickerVisibleRef.current = false;
+            endDatepickerVisibleRef.current = false;
         }
-        e.stopPropagation()
-    }
+        e.stopPropagation();
+    }, []);
 
     if (!isOpen) {
         return null;
     }
+
+    /**
+     * Passer en mode édition depuis le résumé
+     */
+    const showEdit = () => {
+        setModalView(MODAL_VIEWS.EDIT)
+    }
+
+    const showSummary = (event) => {
+        setSelectedEvent(event)
+        setModalView(MODAL_VIEWS.SUMMARY)
+    }
+
+    const showDelete = (event) => {
+        setModalView(MODAL_VIEWS.DELETE)
+    }
+
+    const renderModalView = () => {
+        switch (modalView) {
+            case MODAL_VIEWS.EDIT:
+            case MODAL_VIEWS.CREATE:
+                return (
+                    <FormView
+                        handleCloseModal={handleCloseModal}
+                        event={modalView === MODAL_VIEWS.EDIT ? selectedEvent : null}
+                        handleUpdateEvent={handleUpdateEvent}
+                        handleRemoveEvent={handleRemoveEvent}
+                        startDatepickerVisibleRef={startDatepickerVisibleRef}
+                        endDatepickerVisibleRef={endDatepickerVisibleRef}
+                        showSummary={showSummary}
+                        showDelete={showDelete}
+                    />
+                );
+            case MODAL_VIEWS.SUMMARY:
+                return (
+                    <SummaryView
+                        event={selectedEvent}
+                        handleCloseModal={handleCloseModal}
+                        showEdit={showEdit}
+                        showDelete={showDelete}
+                    />
+                );
+            case MODAL_VIEWS.SEE_MORE:
+                const date = selectedEvent.date;
+                return (
+                    <DayView
+                        date={date}
+                        eventsMap={eventsMap}
+                        showSummary={showSummary}
+                        handleCloseModal={handleCloseModal}
+                    />
+                );
+            case MODAL_VIEWS.DELETE:
+                return (
+                    <DeleteView
+                        event={selectedEvent}
+                        showSummary={showSummary}
+                        handleRemoveEvent={handleRemoveEvent}
+                        handleCloseModal={handleCloseModal}
+                    />
+                );
+            default:
+                return null;
+        }
+    };
 
     return ReactDOM.createPortal (
         <div
@@ -73,31 +169,7 @@ export default function CalendarModal ({ isOpen, closeModal, selectedEvent, upda
                 onClick={onClick}
                 ref={modalWrapperRef}
             >
-                <div className="flex justify-between mb-3">
-                    <h2 className="text-md font-medium text-gray-800">
-                        Ajouter un événement
-                    </h2>
-
-                    <button
-                        type="button"
-                        onClick={handleCloseModal}
-                    >
-                        <svg viewBox="0 0 24 24" className="h-5 w-5">
-                            <path fill="currentColor" d="m12 13.4l-4.9 4.9q-.275.275-.7.275t-.7-.275t-.275-.7t.275-.7l4.9-4.9l-4.9-4.9q-.275-.275-.275-.7t.275-.7t.7-.275t.7.275l4.9 4.9l4.9-4.9q.275-.275.7-.275t.7.275t.275.7t-.275.7L13.4 12l4.9 4.9q.275.275.275.7t-.275.7t-.7.275t-.7-.275z"/>
-                        </svg>
-                    </button>
-                </div>
-
-                <div className="modal-body">
-                    <CalendarForm
-                        handleCloseModal={handleCloseModal}
-                        selectedEvent={selectedEvent}
-                        updateEvent={updateEvent}
-                        removeEvent={removeEvent}
-                        startDatepickerVisibleRef={startDatepickerVisibleRef}
-                        endDatepickerVisibleRef={endDatepickerVisibleRef}
-                    />
-                </div>
+                {renderModalView()}
             </div>
         </div>,
         document.body
