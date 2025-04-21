@@ -34,8 +34,10 @@ export default function MonthCell ({ currentDate, dayOfWeek, eventsMap, position
         return getMaxOffset(positionMap) * 24;
     }, [positionMap]);
 
+    const { renderedEvents, hiddenEventsCount } = prepareEvents(dayEvents, dayOfWeek, positionMap, openModal);
+
     const cellClasses = [
-        "flex-1 flex-row aspect-square p-2",
+        "flex-1 flex-row aspect-square p-2 relative",
         isCurrentDay ? 'bg-blue-100' : '',
         !isCurrentMonth ? 'calendar-cell-out': '',
         !isLastCell ? "border-r border-gray-200" : ""
@@ -46,9 +48,15 @@ export default function MonthCell ({ currentDate, dayOfWeek, eventsMap, position
         !isCurrentMonth ? 'opacity-30' : 'opacity-100',
     ].filter(Boolean).join(" ");
 
+    const seeMoreClasses = [
+        'cursor-pointer text-center text-xs py-1 absolute bottom-2 left-2 right-2 rounded-lg',
+        'border border-blue-200 hover:border-blue-500',
+        'text-blue-500 hover:text-white',
+        'bg-white hover:bg-blue-500',
+    ].join(" ")
+
     return (
         <div className={cellClasses} style={{ width: 'calc(100% / 7)' }}>
-
             {/* Date indicator */}
             <div className={cellDateClasses}>
                 {dayOfWeek.getDate()}
@@ -59,21 +67,45 @@ export default function MonthCell ({ currentDate, dayOfWeek, eventsMap, position
                 className="relative text-xs"
                 style={{ paddingTop: `${paddingTop}px` }}
             >
-                {renderEvents(dayEvents, dayOfWeek, positionMap, openModal)}
+                {renderedEvents}
             </div>
+
+            {/* See more */}
+            {hiddenEventsCount > 0 && (
+                <div
+                    className={seeMoreClasses}
+                    onClick={() => openModal({
+                        type: 'day-view',
+                        date: dayOfWeek,
+                        showAllEvents: true
+                    })}
+                >
+                    +{hiddenEventsCount} voir plus
+                </div>
+            )}
         </div>
     );
 }
 
 /**
- * Rendu des événements pour la cellule
+ * Prépare les événements à afficher et calcule le nombre d'événements cachés
  */
-function renderEvents(dayEvents, dayOfWeek, positionMap, openModal) {
-    return dayEvents.map((event, index) => {
-        const eventStartId = getDayId(event.start);
-        const dayId = getDayId(dayOfWeek);
+function prepareEvents(dayEvents, dayOfWeek, positionMap, openModal) {
+    const fullDayEvents = dayEvents.filter(event => event.fullDay);
+    const hourEvents = dayEvents.filter(event => !event.fullDay);
+    const dayId = getDayId(dayOfWeek);
 
-        // événement sur plusieurs jours
+    const displayedEvents = [];
+    const maxDisplayedEvents = 5;
+
+    // Handle FullDay event
+    const fullDayRendered = fullDayEvents.map((event, index) => {
+        const eventStartId = getDayId(event.start);
+
+        if (displayedEvents.length < maxDisplayedEvents) {
+            displayedEvents.push(event);
+        }
+
         if (event.fullDay && (eventStartId === dayId || dayOfWeek.getDay() === 1)) {
             return renderFullDayEvent(event, dayOfWeek, positionMap, index, openModal);
         }
@@ -83,13 +115,22 @@ function renderEvents(dayEvents, dayOfWeek, positionMap, openModal) {
             positionMap.delete(event);
         }
 
-        // événement sur un jour
-        if (!event.fullDay) {
-            return renderHourEvent(event, index, openModal);
-        }
-
         return null;
+    }).filter(Boolean);
+
+    const remainingSlots = maxDisplayedEvents - displayedEvents.length;
+    const hourEventsToDisplay = hourEvents.slice(0, remainingSlots);
+    const hiddenEventsCount = dayEvents.length - (displayedEvents.length + hourEventsToDisplay.length);
+
+    // Handle Hour event
+    const hourRendered = hourEventsToDisplay.map((event, index) => {
+        return renderHourEvent(event, index, openModal);
     });
+
+    return {
+        renderedEvents: [...fullDayRendered, ...hourRendered],
+        hiddenEventsCount: hiddenEventsCount
+    };
 }
 
 /**
@@ -136,7 +177,7 @@ function renderFullDayEvent(event, dayOfWeek, positionMap, index, openModal) {
                 '--days': days.toString(),
                 top: `${position * 24}px`,
             }}
-            key={index}
+            key={`fullDay-${index}`}
             className={eventClasses.join(' ')}
             onClick={() => openModal(event)}
         >
@@ -167,7 +208,7 @@ function renderHourEvent(event, index, openModal) {
 
     return (
         <div
-            key={index}
+            key={`hour-${index}`}
             className="flex items-center gap-1 mb-1 cursor-pointer hover:bg-gray-100 rounded px-1 py-px transition-colors"
             onClick={() => openModal(event)}
         >
